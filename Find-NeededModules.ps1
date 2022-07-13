@@ -1,5 +1,5 @@
 ﻿<#
-    Copyright (C) 2022  Stolpe.io - The ultimate IT-Support dashboard
+    Copyright (C) 2022  Stolpe.io
     <https://stolpe.io>
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -87,7 +87,7 @@ Function Find-NeededModules {
     # Import module if it's not imported
     foreach ($module in $NeededModules) {
         if ($module -in $ImportedModules.Name) {
-            Write-Host "$($Module) are already imported!"
+            Write-Host "$($Module) are already imported!" -ForegroundColor Green
         }
         else {
             try {
