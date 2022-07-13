@@ -40,8 +40,8 @@ Function Find-NeededModules {
                     Write-Host "$($m) has been updated!" -ForegroundColor Green
                 }
                 catch {
-                    Write-Error "Error updating module $($m)" -ForegroundColor Red
-                    Write-Error "$($PSItem.Exception.Message)" -ForegroundColor Red
+                    Write-Error "Error updating module $($m)"
+                    Write-Error "$($PSItem.Exception.Message)"
                     continue
                 }
 
@@ -55,8 +55,8 @@ Function Find-NeededModules {
                                 Write-Host "$($m) are not uninstalled!" -ForegroundColor Green
                             }
                             catch {
-                                Write-Error "Error uninstalling previous version $($Version.Version) of module $($m)" -ForegroundColor Red
-                                Write-Error "$($PSItem.Exception.Message)" -ForegroundColor Red
+                                Write-Error "Error uninstalling previous version $($Version.Version) of module $($m)"
+                                Write-Error "$($PSItem.Exception.Message)"
                                 continue
                             }
                         }
@@ -75,8 +75,8 @@ Function Find-NeededModules {
                 Write-Host "$($m) are now installed!" -ForegroundColor Green
             }
             catch {
-                Write-Error "Could not install $($m)" -ForegroundColor Red
-                Write-Error "$($PSItem.Exception)" -ForegroundColor Red
+                Write-Error "Could not install $($m)"
+                Write-Error "$($PSItem.Exception)"
                 continue
             }
         }
@@ -96,8 +96,8 @@ Function Find-NeededModules {
                 Write-Host "$($module) are now imported!" -ForegroundColor Green
             }
             catch {
-                Write-Error "Could not import module $($module)" -ForegroundColor Red
-                Write-Error "$($PSItem.Exception.Message)" -ForegroundColor Red
+                Write-Error "Could not import module $($module)"
+                Write-Error "$($PSItem.Exception.Message)"
                 continue
             }
         }
