@@ -1,6 +1,7 @@
 ﻿# Windows-Maintenance
-This script will install all of the needed modules before it runs.  
-This script does maintenance on Windows 10 and 11 machines and does the following:
+With this script it automate maintenance for Windows 10 and 11 for example running Windows Update, deleting tempfiles and folders and much more.  
+  
+This script will do the following:
 - Deleting the following folders if they exists
     - C:\Windows.old
     - C:\$Windows.~BT
@@ -18,3 +19,10 @@ This script does maintenance on Windows 10 and 11 machines and does the followin
 - Update Microsoft Defender signatures from Microsoft Update Server
 - Runs Microsoft Defender Quick Scan
 - Runs Microsoft Windows Disk-Clean
+
+### Links
+- [Readme](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Windows-Maintenance.md)  
+- [Script file](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Windows-Maintenance.ps1)
+- [YouTube video (PS 5.1)](https://youtu.be/DtXwHhKrOnY)
+- [YouTube video (PS 7.x)](https://youtu.be/Qm57XmfhTkg)
+- [Blog post](https://stolpe.io/windows-maintenance-script/)
