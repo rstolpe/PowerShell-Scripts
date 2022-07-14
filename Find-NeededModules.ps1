@@ -19,11 +19,34 @@ Function Find-NeededModules {
     Write-Host "`n=== Making sure that all modules are installad and up to date ===`n"
     # Modules to check if it's installed and imported
     $NeededModules = @("PowerShellGet", "MSIPatches", "PSWindowsUpdate")
+    $NeededPackages = @("NuGet", "PowerShellGet")
     # Collects all of the installed modules on the system
     $CurrentModules = Get-InstalledModule | Select-Object Name, Version | Sort-Object Name
+    # Collects all of the installed packages
+    $AllPackageProviders = Get-PackageProvider -ListAvailable | Select-Object Name -ExpandProperty Name
 
     # Making sure that TLS 1.2 is used.
     [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
+
+    # Installing needed packages if it's missing.
+    Write-Host "Making sure that all of the PackageProviders that are needed are installed..."
+    foreach ($Provider in $NeededPackages) {
+        if ($Provider -NotIn $AllPackageProviders) {
+            Try {
+                Write-Host "Installing $($Provider) as it's missing..."
+                Install-PackageProvider -Name $provider -Force
+                Write-Host "$($Provider) is now installed" -ForegroundColor Green
+            }
+            catch {
+                Write-Error "Error installing $($Provider)"
+                Write-Error "$($PSItem.Exception.Message)"
+                continue
+            }
+        }
+        else {
+            Write-Host "$($provider) is already installed." -ForegroundColor Green
+        }
+    }
 
     # Setting PSGallery as trusted if it's not trusted
     Write-Host "Making sure that PSGallery is set to Trusted..."
