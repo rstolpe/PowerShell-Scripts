@@ -6,6 +6,14 @@ I also use to post videos of the script running at my [YouTube Channel](https://
 This repo will get kind of big during time so I have made a link for all of the scripts below to it's own readme file.  
 ## Windows scripts
 All of the Windows scripts are stored in the Windows [folder]((https://github.com/rstolpe/PowerShell-Scripts/tree/main/Windows)) in this [repo](https://github.com/rstolpe/PowerShell-Scripts), you can find them [here](https://github.com/rstolpe/PowerShell-Scripts/tree/main/Windows)
+
+### Get-UserProfiles
+This function will let you show all of the user profiles that are stored on a local or remote computer, you can also delete one specific user profile or all of them.
+- [Readme](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Get-UserProfiles.md)  
+- [Script file](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Get-UserProfiles.ps1)
+- [YouTube video](https://youtube.com/shorts/SPPSHiMjVmA?feature=share)
+- [Blog post]()
+
 ### AD-Tool
 With this script you can troubleshoot ADUser accounts.
 - [Readme](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/AD-Tool.md)

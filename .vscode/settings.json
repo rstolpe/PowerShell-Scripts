@@ -8,6 +8,7 @@
         "HKLM",
         "minidump",
         "RSAT",
+        "rstolpe",
         "sagerun",
         "takeown",
         "wuauserv"
