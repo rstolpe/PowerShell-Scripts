@@ -20,7 +20,7 @@ This script does maintenance on Windows 10 and 11 machines and does the followin
 - Check and update if needed updates from Windows Update
 - Update Microsoft Defender signatures from Microsoft Update Server
 - Runs Microsoft Defender Quick Scan
-- 
+- Runs Microsoft Windows Disk-Clean
 
 ## Find-NeededModules
 Add the modules that you want to include in the $NeededModules array.  
