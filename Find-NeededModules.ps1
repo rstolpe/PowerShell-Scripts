@@ -34,7 +34,7 @@ Function Find-NeededModules {
         if ($Provider -NotIn $AllPackageProviders) {
             Try {
                 Write-Host "Installing $($Provider) as it's missing..."
-                Install-PackageProvider -Name $provider -Force
+                Install-PackageProvider -Name $provider -Force -Scope AllUsers
                 Write-Host "$($Provider) is now installed" -ForegroundColor Green
             }
             catch {
@@ -79,7 +79,7 @@ Function Find-NeededModules {
             if ($NewestVersion.Version -gt $AllVersions.Version) {
                 try {
                     Write-Host "Updating $($m) to version $($NewestVersion.Version)..."
-                    Update-Module -Name $($m) -AcceptLicense -Scope:AllUsers
+                    Update-Module -Name $($m) -Scope AllUsers
                     Write-Host "$($m) has been updated!" -ForegroundColor Green
                 }
                 catch {
@@ -94,7 +94,7 @@ Function Find-NeededModules {
                         if ($Version.Version -ne $MostRecentVersion) {
                             try {
                                 Write-Host "Uninstalling previous version $($Version.Version) of module $($m)..."
-                                Uninstall-Module -Name $m -RequiredVersion $Version.Version -Force:$True -ErrorAction SilentlyContinue
+                                Uninstall-Module -Name $m -RequiredVersion $Version.Version -Force -ErrorAction SilentlyContinue
                                 Write-Host "$($m) are not uninstalled!" -ForegroundColor Green
                             }
                             catch {
@@ -114,7 +114,7 @@ Function Find-NeededModules {
             # Installing missing module
             Write-Host "Installing module $($m) as it's missing..."
             try {
-                Install-Module -Name $m -AcceptLicense -Scope:AllUsers -Force:$true
+                Install-Module -Name $m -Scope AllUsers -Force
                 Write-Host "$($m) are now installed!" -ForegroundColor Green
             }
             catch {
