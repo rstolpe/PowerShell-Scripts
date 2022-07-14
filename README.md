@@ -2,7 +2,8 @@ I’m writing some useful PowerShell Scripts from time to time and I’m collect
 I also use to post videos of the script running at my [YouTube Channel](https://www.youtube.com/channel/UClrIQN9SysVTEMPmxxn-p1w) and I have a dedicated [playlist](https://www.youtube.com/playlist?list=PLOdABThmxohswmbXjPadlpqdNiQxj9ZoP) for this [repo](https://github.com/rstolpe/PowerShell-Scripts).  
   
 This repo will get kind of big during time so I have made a link for all of the scripts below to it's own readme file.  
-[AD-Tool]()  
+### Windows scripts
+[AD-Tool](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/AD-Tool.md)  
 With this script you can troubleshoot ADUser accounts.
 
 ## Windows-Maintenance
