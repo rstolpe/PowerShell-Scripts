@@ -18,7 +18,7 @@
 Function Find-NeededModules {
     Write-Host "`n=== Making sure that all modules are installad and up to date ===`n"
     # Modules to check if it's installed and imported
-    $NeededModules = @("PowerShellGet", "MSIPatches", "PSWindowsUpdate")
+    $NeededModules = @("PowerShellGet", "MSIPatches", "PSWindowsUpdate", "NuGet")
     $NeededPackages = @("NuGet", "PowerShellGet")
     # Collects all of the installed modules on the system
     $CurrentModules = Get-InstalledModule | Select-Object Name, Version | Sort-Object Name
