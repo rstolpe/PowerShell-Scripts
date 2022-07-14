@@ -119,7 +119,7 @@ Function Find-NeededModules {
             }
             catch {
                 Write-Host "Could not install $($m)" -ForegroundColor Red
-                Write-Host "$($PSItem.Exception)" -ForegroundColor Red
+                Write-Host "$($PSItem.Exception.Message)" -ForegroundColor Red
                 continue
             }
         }
