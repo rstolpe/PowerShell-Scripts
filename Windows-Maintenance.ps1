@@ -18,7 +18,7 @@ $PSVersion = $Host.Version.Major
 Function Find-NeededModules {
     Write-Host "`n=== Making sure that all modules are installad and up to date ===`n"
     # Modules to check if it's installed and imported
-    $NeededModules = @("PowerShellGet", "MSIPatches", "PSWindowsUpdate")
+    $NeededModules = @("PowerShellGet", "MSIPatches", "PSWindowsUpdate", "NuGet")
     $NeededPackages = @("NuGet", "PowerShellGet")
     # Collects all of the installed modules on the system
     $CurrentModules = Get-InstalledModule | Select-Object Name, Version | Sort-Object Name
@@ -66,6 +66,7 @@ Function Find-NeededModules {
     }
 
     # Checks if all modules in $NeededModules are installed and up to date.
+    Write-Host "Making sure that all of the needed modules are installed and up to date..."
     foreach ($m in $NeededModules) {
         if ($m -in $CurrentModules.Name) {
             # Collects the latest version of module
@@ -74,7 +75,6 @@ Function Find-NeededModules {
             $AllVersions = Get-InstalledModule -Name $m -AllVersions | Sort-Object PublishedDate -Descending
             $MostRecentVersion = $AllVersions[0].Version
 
-            Write-Host "Checking if $($m) needs to be updated..."
             # Check if the module are up to date
             if ($NewestVersion.Version -gt $AllVersions.Version) {
                 try {
@@ -222,7 +222,7 @@ Function Update-MSUpdates {
 }
 
 Function Update-MSDefender {
-    Write-Host "`n=== Windows Defender ===`n"
+    Write-Host "`n=== Microsoft Defender ===`n"
     try {
         Write-Host "Update signatures from Microsoft Update Server..."
         Update-MpSignature -UpdateSource MicrosoftUpdateServer

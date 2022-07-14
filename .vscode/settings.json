@@ -8,6 +8,7 @@
         "HKLM",
         "minidump",
         "sagerun",
+        "takeown",
         "wuauserv"
     ]
 }
