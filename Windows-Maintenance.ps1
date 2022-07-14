@@ -157,18 +157,24 @@ Function Remove-MSPatches {
         Write-Host "Remove-MSPatches only works with PowerShell 5.1, skipping this function." -ForegroundColor Yellow
     }
     else {
-        $FreeUp = Get-MsiPatch | select-object OrphanedPatchSize -ExpandProperty OrphanedPatchSize
         Write-Host "`n=== Delete all orphaned patches ===`n"
-        Write-Host "This will free up: $($FreeUp)GB"
-        try {
-            Write-Host "Deleting all of the orphaned patches..."
-            Get-OrphanedPatch | Remove-Item
-            Write-Host "Success, all of the orphaned patches has been deleted!" -ForegroundColor Green
+        $OrphanedPatch = Get-OrphanedPatch
+        if ($Null -ne $OrphanedPatch) {
+            $FreeUp = Get-MsiPatch | select-object OrphanedPatchSize -ExpandProperty OrphanedPatchSize
+            Write-Host "This will free up: $($FreeUp)GB"
+            try {
+                Write-Host "Deleting all of the orphaned patches..."
+                Get-OrphanedPatch | Remove-Item
+                Write-Host "Success, all of the orphaned patches has been deleted!" -ForegroundColor Green
+            }
+            catch {
+                Write-Host "Something went wrong when trying to delete the orphaned patches!" -ForegroundColor Red
+                Write-Host "$($PSItem.Exception.Message)" -ForegroundColor Red
+                continue
+            }
         }
-        catch {
-            Write-Host "Something went wrong when trying to delete the orphaned patches!" -ForegroundColor Red
-            Write-Host "$($PSItem.Exception.Message)" -ForegroundColor Red
-            continue
+        else {
+            Write-Host "No orphaned patches was found." -ForegroundColor Green
         }
     }
 }
