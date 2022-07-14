@@ -1,4 +1,4 @@
-﻿## AD-Tool
+﻿# AD-Tool
 With this script you can troubleshoot ADUser accounts.  
   
 This script contains the following functions:
