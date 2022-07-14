@@ -1,5 +1,4 @@
-# PowerShell-Scripts
-In this repo I'll publish some random PowerShell Scripts, function, modules that I have done.
+I’m writing some useful PowerShell Scripts from time to time and I’m collecting them in my repo and also posting them at my blog <https://stolpe.io>
 
 ## Windows-Maintenance
 This script will install all of the needed modules before it runs.
