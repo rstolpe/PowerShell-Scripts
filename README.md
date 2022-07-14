@@ -7,7 +7,7 @@ This repo will get kind of big during time so I have made a link for all of the 
 ## Windows scripts
 All of the Windows scripts are stored in the Windows [folder]((https://github.com/rstolpe/PowerShell-Scripts/tree/main/Windows)) in this [repo](https://github.com/rstolpe/PowerShell-Scripts), you can find them [here](https://github.com/rstolpe/PowerShell-Scripts/tree/main/Windows)
 ### AD-Tool
-With this script you can troubleshoot ADUser accounts. 
+With this script you can troubleshoot ADUser accounts.
 - [Readme](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/AD-Tool.md)
 - [Script file](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/AD-Tool.ps1)
 - [YouTube video](https://youtu.be/IVy4IBaB_qM)
@@ -22,12 +22,7 @@ With this script it automate maintenance for Windows 10 and 11 for example runni
 - [Blog post](https://stolpe.io/windows-maintenance-script/)
 
 ### Find-NeededModules
-Add the modules that you want to include in the $NeededModules array.  
-This function are then doing the following.  
-- Checks so TLS 1.2 are used by PowerShell
-- Making sure that NuGet and PowerShellGet are installed as provider
-- Making sure that PSGallery are set as trusted
-- Checks if the module are installed, if it's not then it get installed
-- If the module are installed it will check if it's the latest version if not then it will update the module.
-- If the module are updated the script will uninstall the old version of the module
-- Then it will import all of the modules.
+This function are making sure that the needed modules are installed, up to date and imported.
+- [Readme](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Find-NeededModules.md)  
+- [Script file](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Find-NeededModules.ps1)
+- [Blog post](https://stolpe.io/made-a-function-to-verify-modules/)
