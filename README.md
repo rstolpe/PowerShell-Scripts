@@ -12,7 +12,7 @@ This function will let you show all of the user profiles that are stored on a lo
 - [Readme](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Get-UserProfiles.md)  
 - [Script file](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Get-UserProfiles.ps1)
 - [YouTube video](https://youtube.com/shorts/SPPSHiMjVmA?feature=share)
-- [Blog post]()
+- [Blog post](https://stolpe.io/script-to-delete-user-profiles-from-local-and-remote-computer/)
 
 ### AD-Tool
 With this script you can troubleshoot ADUser accounts.
