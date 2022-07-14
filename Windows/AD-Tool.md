@@ -1,7 +1,7 @@
 ﻿# AD-Tool
 With this script you can troubleshoot ADUser accounts. 
   
-This script contains the following functions:  
+### This script will do the following 
 **Check status of users account**  
 This function are checking the following things on a user and showing the results
 - Is the account enabled?
