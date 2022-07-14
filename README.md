@@ -32,3 +32,19 @@ This function are then doing the following.
 - If the module are installed it will check if it's the latest version if not then it will update the module.
 - If the module are updated the script will uninstall the old version of the module
 - Then it will import all of the modules.
+
+## AD Tool
+This script contains the following functions:
+### Check status of users account
+This function are checking the following things on a user and showing the results
+- Is the account enabled?
+- Is the account locked?
+- Has the account expired?
+- Has the password expired?
+- When did the user last connect to the domain?
+
+### Unlock user
+Checking it the user/users are locked and it the user/users are locked the script will unlock the user/users
+
+### Enable user or users
+Checking if the user/users are disabled if the user/users are disabled the script will enable the user/users
