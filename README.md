@@ -33,7 +33,7 @@ This function are then doing the following.
 - If the module are updated the script will uninstall the old version of the module
 - Then it will import all of the modules.
 
-## AD Tool
+## AD-Tool
 This script contains the following functions:
 ### Check status of users account
 This function are checking the following things on a user and showing the results
