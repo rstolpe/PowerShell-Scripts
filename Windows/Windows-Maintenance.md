@@ -1,7 +1,7 @@
 ﻿# Windows-Maintenance
 With this script it automate maintenance for Windows 10 and 11 for example running Windows Update, deleting tempfiles and folders and much more.  
   
-This script will do the following:
+**This script will do the following:**
 - Deleting the following folders if they exists
     - C:\Windows.old
     - C:\$Windows.~BT
