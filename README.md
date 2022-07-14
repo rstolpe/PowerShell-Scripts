@@ -2,11 +2,21 @@ I’m writing some useful PowerShell Scripts from time to time and I’m collect
 I also use to post videos of the script running at my [YouTube Channel](https://www.youtube.com/channel/UClrIQN9SysVTEMPmxxn-p1w) and I have a dedicated [playlist](https://www.youtube.com/playlist?list=PLOdABThmxohswmbXjPadlpqdNiQxj9ZoP) for this [repo](https://github.com/rstolpe/PowerShell-Scripts).  
   
 This repo will get kind of big during time so I have made a link for all of the scripts below to it's own readme file.  
-### Windows scripts
-- [AD-Tool](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/AD-Tool.md)  
-With this script you can troubleshoot ADUser accounts.
-- [Windows-Maintenance](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Windows-Maintenance.md)  
+## Windows scripts
+### AD-Tool
+With this script you can troubleshoot ADUser accounts.  
+Links:  
+- [Readme](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/AD-Tool.md)
+- [Script file](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/AD-Tool.ps1)
+- [YouTube video](https://youtu.be/IVy4IBaB_qM)
+
+### Windows-Maintenance
 With this script it automate maintenance for Windows 10 and 11 for example running Windows Update, deleting tempfiles and folders and much more.
+Links:  
+- [Readme](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Windows-Maintenance.md)  
+- [Script file](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Windows-Maintenance.ps1)
+- [YouTube video (PS 5.1)](https://youtu.be/DtXwHhKrOnY)
+- [YouTube video (PS 7.x)](https://youtu.be/Qm57XmfhTkg)
 
 ## Find-NeededModules
 Add the modules that you want to include in the $NeededModules array.  
