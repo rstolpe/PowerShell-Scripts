@@ -3,7 +3,7 @@ I also use to post videos of the script running at my [YouTube Channel](https://
   
 This repo will get kind of big during time so I have made a link for all of the scripts below to it's own readme file.  
 ## Windows scripts
-All of the Windows scripts are stored in the [Windows folder]((https://github.com/rstolpe/PowerShell-Scripts/tree/main/Windows)) in this [repo](https://github.com/rstolpe/PowerShell-Scripts), you can find them [here](https://github.com/rstolpe/PowerShell-Scripts/tree/main/Windows)
+All of the Windows scripts are stored in the Windows [folder]((https://github.com/rstolpe/PowerShell-Scripts/tree/main/Windows)) in this [repo](https://github.com/rstolpe/PowerShell-Scripts), you can find them [here](https://github.com/rstolpe/PowerShell-Scripts/tree/main/Windows)
 ### AD-Tool
 With this script you can troubleshoot ADUser accounts. 
 - [Readme](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/AD-Tool.md)
