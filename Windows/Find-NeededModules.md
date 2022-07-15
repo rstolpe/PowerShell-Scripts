@@ -1,6 +1,6 @@
 ﻿# Find-NeededModules
 This function are making sure that the needed modules are installed, up to date and imported.  
-If you see anything that you want to improve or a bug, please [report it](https://github.com/rstolpe/PowerShell-Scripts/issues/new/choose)
+If you see anything that you want to improve or a bug, please [report it](https://github.com/rstolpe/PowerShell-Scripts/issues/new/choose) it's also fine to request new scripts.
 ### This script will do the following
 - Checks so TLS 1.2 are used by PowerShell
 - Making sure that NuGet and PowerShellGet are installed as provider

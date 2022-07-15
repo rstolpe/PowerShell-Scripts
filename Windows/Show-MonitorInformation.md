@@ -1,7 +1,7 @@
 ﻿# Show-MonitorInformation
 This function will return information about the monitor from either local or remote computer.  
 If you use this script against a remote computer make sure you have enabled WinRM, I made a guide for how to enable it with GPO [here](https://stolpe.io/enable-winrm-with-gpo/)  
-If you see anything that you want to improve or a bug, please [report it](https://github.com/rstolpe/PowerShell-Scripts/issues/new/choose)
+If you see anything that you want to improve or a bug, please [report it](https://github.com/rstolpe/PowerShell-Scripts/issues/new/choose) it's also fine to request new scripts.
 ### This script will return the following information
 - Is the monitor active? (connected)
 - Manufacturer Name
