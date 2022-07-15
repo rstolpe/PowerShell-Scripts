@@ -4,6 +4,8 @@ I’m writing some useful PowerShell Scripts from time to time and I’m collect
 I also use to post videos of the script running at my [YouTube Channel](https://www.youtube.com/channel/UClrIQN9SysVTEMPmxxn-p1w) and I have a dedicated [playlist](https://www.youtube.com/playlist?list=PLOdABThmxohswmbXjPadlpqdNiQxj9ZoP) for this [repo](https://github.com/rstolpe/PowerShell-Scripts).  
   
 This [repo](https://github.com/rstolpe/PowerShell-Scripts) will get kind of big during time so I have made a link for all of the scripts below to it's own readme file.  
+
+As many of my scripts are depending on WinRM to work I have made a guide how to activate it with GPO [here](https://stolpe.io/enable-winrm-with-gpo/)
 ## Windows scripts
 All of the Windows scripts are stored in the [Windows folder](https://github.com/rstolpe/PowerShell-Scripts/tree/main/Windows) in this [repo](https://github.com/rstolpe/PowerShell-Scripts), you can find them [here](https://github.com/rstolpe/PowerShell-Scripts/tree/main/Windows)
 
