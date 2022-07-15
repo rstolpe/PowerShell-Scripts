@@ -112,7 +112,7 @@ Function Remove-UserProfile {
     }
     elseif ($DeleteAll -eq $False) {
         foreach ($user in $ProfileToDelete) {
-            if ("C:\Users\$($user)" -in $AllUserProfiles.LocalPath) {
+            if ("$env:SystemDrive\Users\$($user)" -in $AllUserProfiles.LocalPath) {
                 # check if the userprofile are loaded and if it is show warning
                 try {
                     write-Host "Deleting user profile $($user)..."
