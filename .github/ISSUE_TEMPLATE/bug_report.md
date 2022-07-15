@@ -7,6 +7,9 @@ assignees: ''
 
 ---
 
+**In what script does the bug appear?**
+Write the name of the .ps1 file or script name where the bug appears, also add the script name in the title like [Get-UserProfiles]Bug
+
 **Describe the bug**
 A clear and concise description of what the bug is.
 
