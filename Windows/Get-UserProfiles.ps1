@@ -61,16 +61,16 @@ Function Remove-UserProfile {
         .PARAMETER DeleteAll
         If you want to delete all of the user profiles on the local or remote computer you can set this to $True or $False
         .EXAMPLE
-        Remove-UserProfile -DeleteAll $True
+        Remove-UserProfile -DeleteAll
         This will remove all of the user profiles from the local computer your running the script from.
 
-        Remove-UserProfile -DeleteAll $False -ProfileToDelete @("User1", "User2")
+        Remove-UserProfile -ProfileToDelete @("User1", "User2")
         This will delete only user profile "User1" and "User2" from the local computer where you run the script from.
 
-        Remove-UserProfile -Computer "Win11-test" -DeleteAll $True
+        Remove-UserProfile -Computer "Win11-test" -DeleteAll
         This will delete all of the user profiles on the remote computer named "Win11-Test"
 
-        Remove-UserProfile -Computer "Win11-test" -DeleteAll $False -ProfileToDelete @("User1", "User2")
+        Remove-UserProfile -Computer "Win11-test" -ProfileToDelete @("User1", "User2")
         This will delete only user profile "User1" and "User2" from the remote computer named "Win11-Test"
 
     #>
@@ -79,7 +79,7 @@ Function Remove-UserProfile {
     Param(
         [Parameter(Mandatory = $False)][string]$Computer,
         [Parameter(Mandatory = $False)][array]$ProfileToDelete,
-        [Parameter(Mandatory)][bool]$DeleteAll,
+        [Parameter(Mandatory)][switch]$DeleteAll,
         [Parameter(Mandatory = $False)][array]$ExcludedProfiles
     )
     $AllUserProfiles = Get-CimInstance -ComputerName $Computer -className Win32_UserProfile | Where-Object { (-Not ($_.Special)) } | Select-Object LocalPath, Loaded
