@@ -24,11 +24,11 @@
 
     [CmdletBinding()]
     Param(
-        [Parameter(Mandatory = $False)][string]$Computer,
-        [Parameter(Mandatory = $False)][array]$ExcludedProfiles
+        [Parameter][string]$Computer,
+        [Parameter][array]$ExcludedProfiles
     )
     if ([string]::IsNullOrEmpty($Computer)) {
-        $Computer = "localhost"
+        [string]$Computer = "localhost"
     }
 
     try {
@@ -86,13 +86,13 @@ Function Remove-UserProfile {
 
     [CmdletBinding()]
     Param(
-        [Parameter(Mandatory = $False)][string]$Computer,
-        [Parameter(Mandatory = $False)][array]$ProfileToDelete,
-        [Parameter(Mandatory)][switch]$DeleteAll,
-        [Parameter(Mandatory = $False)][array]$ExcludedProfiles
+        [Parameter][string]$Computer,
+        [Parameter][array]$ProfileToDelete,
+        [Parameter][switch]$DeleteAll,
+        [Parameter][array]$ExcludedProfiles
     )
     if ([string]::IsNullOrEmpty($Computer)) {
-        $Computer = "localhost"
+        [string]$Computer = "localhost"
     }
 
     $AllUserProfiles = Get-CimInstance -ComputerName $Computer -className Win32_UserProfile | Where-Object { (-Not ($_.Special)) } | Select-Object LocalPath, Loaded
