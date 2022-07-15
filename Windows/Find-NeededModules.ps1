@@ -196,4 +196,5 @@ Function Find-NeededModules {
             }
         }
     }
+    Write-Host "Finished!" -ForegroundColor Green
 }
