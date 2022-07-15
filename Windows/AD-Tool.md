@@ -1,6 +1,5 @@
 ﻿# AD-Tool
 With this script you can troubleshoot ADUser accounts. 
-If you see anything that you want to improve or a bug, please [report it](https://github.com/rstolpe/PowerShell-Scripts/issues/new/choose) it's also fine to request new scripts.
 ### This script will do the following 
 **Check status of users account**  
 This function are checking the following things on a user and showing the results
@@ -20,3 +19,4 @@ Checking if the user/users are disabled if the user/users are disabled the scrip
 - [Script file](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/AD-Tool.ps1)
 - [YouTube video](https://youtu.be/IVy4IBaB_qM)
 - [Blog post](https://stolpe.io/created-a-adtool-in-powershell/)
+- [Report bug, issue, improvement request or request new script](https://github.com/rstolpe/PowerShell-Scripts/issues/new/choose)

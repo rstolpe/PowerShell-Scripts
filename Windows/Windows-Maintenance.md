@@ -1,6 +1,5 @@
 ﻿# Windows-Maintenance
 With this script it automate maintenance for Windows 10 and 11 for example running Windows Update, deleting tempfiles and folders and much more.  
-If you see anything that you want to improve or a bug, please [report it](https://github.com/rstolpe/PowerShell-Scripts/issues/new/choose) it's also fine to request new scripts.
 ### This script will do the following
 - Deleting the following folders if they exists
     - C:\Windows.old
@@ -26,3 +25,4 @@ If you see anything that you want to improve or a bug, please [report it](https:
 - [YouTube video (PS 5.1)](https://youtu.be/DtXwHhKrOnY)
 - [YouTube video (PS 7.x)](https://youtu.be/Qm57XmfhTkg)
 - [Blog post](https://stolpe.io/windows-maintenance-script/)
+- [Report bug, issue, improvement request or request new script](https://github.com/rstolpe/PowerShell-Scripts/issues/new/choose)
