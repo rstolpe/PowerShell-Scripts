@@ -116,7 +116,7 @@ Function Remove-UserProfile {
                 # check if the userprofile are loaded and if it is show warning
                 try {
                     write-Host "Deleting user profile $($user)..."
-                    Get-CimInstance -ComputerName $Computer Win32_UserProfile | Where-Object { $_.LocalPath -eq "C:\Users\$($user)" } | Remove-CimInstance
+                    Get-CimInstance -ComputerName $Computer Win32_UserProfile | Where-Object { $_.LocalPath -eq "$env:SystemDrive\Users\$($user)" } | Remove-CimInstance
                     Write-Host "The user profile $($user) are now deleted!" -ForegroundColor Green
                 }
                 catch {
