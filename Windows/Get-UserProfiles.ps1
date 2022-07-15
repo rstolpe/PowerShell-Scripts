@@ -35,10 +35,10 @@
         Get-CimInstance -ComputerName $Computer -className Win32_UserProfile | Where-Object { (-Not ($_.Special)) } | Foreach-Object {
             if (-Not ($_.LocalPath.split('\')[-1] -in $ExcludedProfiles)) {
                 [PSCustomObject]@{
-                    ProfileUserName = $_.LocalPath.split('\')[-1]
-                    ProfilePath     = $_.LocalPath
-                    LastUsed        = ($_.LastUseTime -as [DateTime]).ToString("yyyy-MM-dd HH:mm")
-                    IsProfileLoaded = $_.Loaded
+                    'UserName'               = $_.LocalPath.split('\')[-1]
+                    'Profile path'           = $_.LocalPath
+                    'Last used'              = ($_.LastUseTime -as [DateTime]).ToString("yyyy-MM-dd HH:mm")
+                    'Is the profile active?' = $_.Loaded
                 }
             }
         }
