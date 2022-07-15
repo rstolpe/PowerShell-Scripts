@@ -4,7 +4,7 @@ I’m writing some useful PowerShell Scripts from time to time and I’m collect
 I also use to post videos of the script running at my [YouTube Channel](https://www.youtube.com/channel/UClrIQN9SysVTEMPmxxn-p1w) and I have a dedicated [playlist](https://www.youtube.com/playlist?list=PLOdABThmxohswmbXjPadlpqdNiQxj9ZoP) for this [repo](https://github.com/rstolpe/PowerShell-Scripts).  
 ### Links
 - [Report bug, issue, improvement request or request new script](https://github.com/rstolpe/PowerShell-Scripts/issues/new/choose)
-- [Guide, Active WinRM with GPO](https://stolpe.io/enable-winrm-with-gpo/)
+- [Guide, activate WinRM with GPO](https://stolpe.io/enable-winrm-with-gpo/)
 - [Blog](https://stolpe.io)
 ## Scripts
 ### Windows
