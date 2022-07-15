@@ -44,8 +44,8 @@
         }
     }
     catch {
-        Write-Error "Something went wrong when collecting the user profiles!"
-        Write-Error "$($PSItem.Exception.Message)"
+        Write-Host "Something went wrong when collecting the user profiles!" -ForegroundColor Red
+        Write-Host "$($PSItem.Exception.Message)" -ForegroundColor Red
         break
     }
 }
@@ -113,8 +113,8 @@ Function Remove-UserProfile {
                         Write-Host "The user profile $($Profile.LocalPath.split('\')[-1]) are now deleted!" -ForegroundColor Green
                     }
                     catch {
-                        Write-Error "Something went wrong when trying to delete the user profile $($Profile.LocalPath.split('\')[-1])"
-                        Write-Error "$($PSItem.Exception.Message)"
+                        Write-Host "Something went wrong when trying to delete the user profile $($Profile.LocalPath.split('\')[-1])" -ForegroundColor Red
+                        Write-Host "$($PSItem.Exception.Message)" -ForegroundColor Red
                         continue
                     }
                 }
@@ -131,13 +131,13 @@ Function Remove-UserProfile {
                     Write-Host "The user profile $($user) are now deleted!" -ForegroundColor Green
                 }
                 catch {
-                    Write-Error "Something went wrong when trying to delete the user profile $($user)"
-                    Write-Error "$($PSItem.Exception.Message)"
+                    Write-Host "Something went wrong when trying to delete the user profile $($user)" -ForegroundColor Red
+                    Write-Host "$($PSItem.Exception.Message)" -ForegroundColor Red
                     continue
                 }
             }
             else {
-                Write-Warning "$($user) did not have any user profile on the computer!"
+                Write-Warning "$($user) did not have any user profile on $($Computer)!"
             }
         }
     }
