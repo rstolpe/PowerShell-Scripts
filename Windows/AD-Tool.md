@@ -1,6 +1,6 @@
 ﻿# AD-Tool
 With this script you can troubleshoot ADUser accounts. 
-  
+If you see anything that you want to improve or a bug, please [report it](https://github.com/rstolpe/PowerShell-Scripts/issues/new/choose)
 ### This script will do the following 
 **Check status of users account**  
 This function are checking the following things on a user and showing the results
