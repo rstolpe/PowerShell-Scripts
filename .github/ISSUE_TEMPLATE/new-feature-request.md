@@ -1,6 +1,6 @@
 ---
 name: New script request
-about: Suggest an new idea/feature
+about: Suggest an new idea
 title: ''
 labels: "\U0001F680 new feature request"
 assignees: ''
