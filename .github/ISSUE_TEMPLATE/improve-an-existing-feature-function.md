@@ -1,13 +1,13 @@
 ---
 name: Improve an existing script/function
-about: Suggest an improvement for an existing script or function
+about: Suggestion to improve a script or function
 title: ''
 labels: enhancement
 assignees: ''
 
 ---
 
-**In what script does the bug appear?**
+**For what script do you suggest the improvement?**
 Write the name of the .ps1 file or script name where you want to add the improvement, also add the script name in the title like [Get-UserProfiles] See users better
 
 **Is your feature request related to a problem? Please describe.**
