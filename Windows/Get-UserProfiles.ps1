@@ -27,6 +27,9 @@
         [Parameter(Mandatory = $False)][string]$Computer,
         [Parameter(Mandatory = $False)][array]$ExcludedProfiles
     )
+    if ([string]::IsNullOrEmpty($Computer)) {
+        $Computer = "localhost"
+    }
 
     try {
         Get-CimInstance -ComputerName $Computer -className Win32_UserProfile | Where-Object { (-Not ($_.Special)) } | Foreach-Object {
@@ -82,6 +85,10 @@ Function Remove-UserProfile {
         [Parameter(Mandatory)][switch]$DeleteAll,
         [Parameter(Mandatory = $False)][array]$ExcludedProfiles
     )
+    if ([string]::IsNullOrEmpty($Computer)) {
+        $Computer = "localhost"
+    }
+
     $AllUserProfiles = Get-CimInstance -ComputerName $Computer -className Win32_UserProfile | Where-Object { (-Not ($_.Special)) } | Select-Object LocalPath, Loaded
 
     if ($DeleteAll -eq $True) {
