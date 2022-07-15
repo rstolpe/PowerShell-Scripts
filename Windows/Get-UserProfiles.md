@@ -6,6 +6,7 @@ This function will let you show all of the user profiles that are stored on a lo
 - Show all of the user profiles from a remote computer
 - Delete one specific user profile or all of the user profiles from a local computer
 - Delete one specific user profile or all of the user profiles from a remote computer
+- Delete all user profiles from both local and remote computer
 - You can exclude user profiles to show
 - You can exclude user profile to be deleted
 - If the user profile are loaded it will not get deleted
