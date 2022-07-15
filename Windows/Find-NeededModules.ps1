@@ -52,8 +52,6 @@ Function Find-NeededModules {
     )
 
     Write-Host "`n=== Making sure that all modules are installad and up to date ===`n"
-    # Modules to check if it's installed and imported
-    $NeededModules = @("PowerShellGet", "NuGet")
     # This packages are needed for this script to work, you can add more if you want. Don't confuse this with modules
     $NeededPackages = @("NuGet", "PowerShellGet")
     # Collects all of the installed modules on the system
