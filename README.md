@@ -7,7 +7,7 @@ This [repo](https://github.com/rstolpe/PowerShell-Scripts) will get kind of big 
 ## Windows scripts
 All of the Windows scripts are stored in the [Windows folder](https://github.com/rstolpe/PowerShell-Scripts/tree/main/Windows) in this [repo](https://github.com/rstolpe/PowerShell-Scripts), you can find them [here](https://github.com/rstolpe/PowerShell-Scripts/tree/main/Windows)
 
-- [Get-UserProfiles](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Get-UserProfiles.md)
+- [Get-UserProfiles](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Get-UserProfiles.md)  
     This function will let you show all of the user profiles that are stored on a local or remote computer, you can also delete one specific user profile or all of them.
 - [AD-Tool](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/AD-Tool.md)
     - With this script you can troubleshoot ADUser accounts.
