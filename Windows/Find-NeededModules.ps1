@@ -33,6 +33,9 @@ Function Find-NeededModules {
         .PARAMETER DeleteOldVersion
         When this is used it will delete all of the older versions of the module after upgrading the module
 
+        .PARAMETER OnlyUpgrade
+        When this is used the script will not install any modules it will upgrade all of the already installed modules on the computer to the latest version.
+
         .EXAMPLE
         Find-NeededModules -NeededModules @("PowerCLI", "ImportExcel") -ImportModules -DeleteOldVersion
         This will check so PowerCLI and ImportExcel is installd and up to date, it not it will install them or upgrade them to the latest version and then delete
@@ -41,6 +44,11 @@ Function Find-NeededModules {
         Find-NeededModules -NeededModules @("PowerCLI")
         This will only install PowerCli if it's not installed and upgrade it if needed. This example will not delete the old versions of PowerCli or import the module at the end.
 
+        Find-NeededModules -OnlyUpgrade
+        This will upgrade all of the already installed modules on the computer to the latest version
+
+        Find-NeededModules -OnlyUpgrade -DeleteOldVersion
+        This will upgrade all of the already installed modules on the computer to the latest version and delete all of the old versions after
 
     #>
 
@@ -53,6 +61,7 @@ Function Find-NeededModules {
     )
 
     Write-Host "`n=== Making sure that all modules are installad and up to date ===`n"
+    Write-Host "Please wait, this can take time..."
     # This packages are needed for this script to work, you can add more if you want. Don't confuse this with modules
     $NeededPackages = @("NuGet", "PowerShellGet")
     # Collects all of the installed modules on the system
@@ -61,7 +70,7 @@ Function Find-NeededModules {
     $AllPackageProviders = Get-PackageProvider -ListAvailable | Select-Object Name -ExpandProperty Name
 
     if ($OnlyUpgrade -eq $True) {
-        $NeededModules = $CurrentModules
+        $NeededModules = $CurrentModules.Name
     }
 
     # Making sure that TLS 1.2 is used.
