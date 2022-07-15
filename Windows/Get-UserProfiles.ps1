@@ -24,8 +24,8 @@
 
     [CmdletBinding()]
     Param(
-        [Parameter][string]$Computer,
-        [Parameter][array]$ExcludedProfiles
+        [string]$Computer,
+        [array]$ExcludedProfiles
     )
     if ([string]::IsNullOrEmpty($Computer)) {
         [string]$Computer = "localhost"
@@ -86,10 +86,10 @@ Function Remove-UserProfile {
 
     [CmdletBinding()]
     Param(
-        [Parameter][string]$Computer,
-        [Parameter][array]$ProfileToDelete,
-        [Parameter][switch]$DeleteAll,
-        [Parameter][array]$ExcludedProfiles
+        [string]$Computer,
+        [array]$ProfileToDelete,
+        [switch]$DeleteAll,
+        [array]$ExcludedProfiles
     )
     if ([string]::IsNullOrEmpty($Computer)) {
         [string]$Computer = "localhost"

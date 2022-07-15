@@ -48,7 +48,8 @@ Function Find-NeededModules {
     Param(
         [Parameter][array]$NeededModules,
         [Parameter][switch]$ImportModules,
-        [Parameter][switch]$DeleteOldVersion
+        [Parameter][switch]$DeleteOldVersion,
+        [Parameter][switch]$OnlyUpgrade
     )
 
     Write-Host "`n=== Making sure that all modules are installad and up to date ===`n"
@@ -58,6 +59,10 @@ Function Find-NeededModules {
     $CurrentModules = Get-InstalledModule | Select-Object Name, Version | Sort-Object Name
     # Collects all of the installed packages
     $AllPackageProviders = Get-PackageProvider -ListAvailable | Select-Object Name -ExpandProperty Name
+    
+    if ($OnlyUpgrade -eq $True) {
+        $NeededModules = $CurrentModules
+    }
 
     # Making sure that TLS 1.2 is used.
     [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
