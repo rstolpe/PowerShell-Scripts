@@ -16,9 +16,45 @@
 
 
 Function Find-NeededModules {
+    <#
+        .SYNOPSIS
+        Function that will let you in a easy way install or upgrade needed modules
+
+        .DESCRIPTION
+        This function will install specified modules if they are missing or upgrade them to the latest version if the modules already are installed.
+        Option to delete all of the older versions of the modules and import the modules at the end does also exist.
+
+        .PARAMETER NeededModules
+        Here you can specify what modules you want to install and upgrade
+
+        .PARAMETER ImportModules
+        If this is used it will import all of the modules in the end of the script
+
+        .PARAMETER DeleteOldVersion
+        When this is used it will delete all of the older versions of the module after upgrading the module
+
+        .EXAMPLE
+        Find-NeededModules -NeededModules @("PowerCLI", "ImportExcel") -ImportModules -DeleteOldVersion
+        This will check so PowerCLI and ImportExcel is installd and up to date, it not it will install them or upgrade them to the latest version and then delete
+        all of the old versions and import the modules.
+
+        Find-NeededModules -NeededModules @("PowerCLI")
+        This will only install PowerCli if it's not installed and upgrade it if needed. This example will not delete the old versions of PowerCli or import the module at the end.
+
+
+    #>
+
+    [CmdletBinding()]
+    Param(
+        [Parameter][array]$NeededModules,
+        [Parameter][switch]$ImportModules,
+        [Parameter][switch]$DeleteOldVersion
+    )
+
     Write-Host "`n=== Making sure that all modules are installad and up to date ===`n"
     # Modules to check if it's installed and imported
-    $NeededModules = @("PowerShellGet", "MSIPatches", "PSWindowsUpdate", "NuGet")
+    $NeededModules = @("PowerShellGet", "NuGet")
+    # This packages are needed for this script to work, you can add more if you want. Don't confuse this with modules
     $NeededPackages = @("NuGet", "PowerShellGet")
     # Collects all of the installed modules on the system
     $CurrentModules = Get-InstalledModule | Select-Object Name, Version | Sort-Object Name
@@ -87,20 +123,21 @@ Function Find-NeededModules {
                     Write-Error "$($PSItem.Exception.Message)"
                     continue
                 }
-
-                # Remove old versions of the modules
-                if ($AllVersions.Count -gt 1 ) {
-                    Foreach ($Version in $AllVersions) {
-                        if ($Version.Version -ne $MostRecentVersion) {
-                            try {
-                                Write-Host "Uninstalling previous version $($Version.Version) of module $($m)..."
-                                Uninstall-Module -Name $m -RequiredVersion $Version.Version -Force -ErrorAction SilentlyContinue
-                                Write-Host "$($m) are not uninstalled!" -ForegroundColor Green
-                            }
-                            catch {
-                                Write-Error "Error uninstalling previous version $($Version.Version) of module $($m)"
-                                Write-Error "$($PSItem.Exception.Message)"
-                                continue
+                if ($DeleteOldVersion -eq $true) {
+                    # Remove old versions of the modules
+                    if ($AllVersions.Count -gt 1 ) {
+                        Foreach ($Version in $AllVersions) {
+                            if ($Version.Version -ne $MostRecentVersion) {
+                                try {
+                                    Write-Host "Uninstalling previous version $($Version.Version) of module $($m)..."
+                                    Uninstall-Module -Name $m -RequiredVersion $Version.Version -Force -ErrorAction SilentlyContinue
+                                    Write-Host "$($m) are not uninstalled!" -ForegroundColor Green
+                                }
+                                catch {
+                                    Write-Error "Error uninstalling previous version $($Version.Version) of module $($m)"
+                                    Write-Error "$($PSItem.Exception.Message)"
+                                    continue
+                                }
                             }
                         }
                     }
@@ -124,24 +161,26 @@ Function Find-NeededModules {
             }
         }
     }
-    # Collect all of the imported modules.
-    $ImportedModules = get-module | Select-Object Name, Version
+    if ($ImportModules -eq $true) {
+        # Collect all of the imported modules.
+        $ImportedModules = get-module | Select-Object Name, Version
     
-    # Import module if it's not imported
-    foreach ($module in $NeededModules) {
-        if ($module -in $ImportedModules.Name) {
-            Write-Host "$($Module) are already imported!" -ForegroundColor Green
-        }
-        else {
-            try {
-                Write-Host "Importing $($module) module..."
-                Import-Module -Name $module -Force
-                Write-Host "$($module) are now imported!" -ForegroundColor Green
+        # Import module if it's not imported
+        foreach ($module in $NeededModules) {
+            if ($module -in $ImportedModules.Name) {
+                Write-Host "$($Module) are already imported!" -ForegroundColor Green
             }
-            catch {
-                Write-Error "Could not import module $($module)"
-                Write-Error "$($PSItem.Exception.Message)"
-                continue
+            else {
+                try {
+                    Write-Host "Importing $($module) module..."
+                    Import-Module -Name $module -Force
+                    Write-Host "$($module) are now imported!" -ForegroundColor Green
+                }
+                catch {
+                    Write-Error "Could not import module $($module)"
+                    Write-Error "$($PSItem.Exception.Message)"
+                    continue
+                }
             }
         }
     }
