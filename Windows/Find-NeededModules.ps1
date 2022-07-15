@@ -46,10 +46,10 @@ Function Find-NeededModules {
 
     [CmdletBinding()]
     Param(
-        [Parameter][array]$NeededModules,
-        [Parameter][switch]$ImportModules,
-        [Parameter][switch]$DeleteOldVersion,
-        [Parameter][switch]$OnlyUpgrade
+        [array]$NeededModules,
+        [switch]$ImportModules,
+        [switch]$DeleteOldVersion,
+        [switch]$OnlyUpgrade
     )
 
     Write-Host "`n=== Making sure that all modules are installad and up to date ===`n"
@@ -59,7 +59,7 @@ Function Find-NeededModules {
     $CurrentModules = Get-InstalledModule | Select-Object Name, Version | Sort-Object Name
     # Collects all of the installed packages
     $AllPackageProviders = Get-PackageProvider -ListAvailable | Select-Object Name -ExpandProperty Name
-    
+
     if ($OnlyUpgrade -eq $True) {
         $NeededModules = $CurrentModules
     }
