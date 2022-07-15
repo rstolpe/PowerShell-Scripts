@@ -67,11 +67,17 @@ Function Remove-UserProfile {
         Remove-UserProfile -DeleteAll
         This will remove all of the user profiles from the local computer your running the script from.
 
+        Remove-UserProfile -ExcludedProfiles @("User1", "User2") -DeleteAll
+        This will delete all of the user profiles except user profile User1 and User2 on the local computer
+
         Remove-UserProfile -ProfileToDelete @("User1", "User2")
         This will delete only user profile "User1" and "User2" from the local computer where you run the script from.
 
         Remove-UserProfile -Computer "Win11-test" -DeleteAll
         This will delete all of the user profiles on the remote computer named "Win11-Test"
+
+        Remove-UserProfile -Computer "Win11-test" -ExcludedProfiles @("User1", "User2") -DeleteAll
+        This will delete all of the user profiles except user profile User1 and User2 on the remote computer named "Win11-Test"
 
         Remove-UserProfile -Computer "Win11-test" -ProfileToDelete @("User1", "User2")
         This will delete only user profile "User1" and "User2" from the remote computer named "Win11-Test"
@@ -93,19 +99,24 @@ Function Remove-UserProfile {
 
     if ($DeleteAll -eq $True) {
         foreach ($Profile in $AllUserProfiles) {
-            if ($Profile.Loaded -eq $True) {
-                Write-Warning "The user profile $($Profile.LocalPath.split('\')[-1]) is loaded, can't delete it so skipping it!"
+            if ($Profile.LocalPath.split('\')[-1] -in $ExcludedProfiles) {
+                Write-Host "$($Profile.LocalPath.split('\')[-1]) are excluded so it wont be deleted, proceeding to next profile..."
             }
             else {
-                try {
-                    write-Host "Deleting user profile $($Profile.LocalPath.split('\')[-1])..."
-                    Get-CimInstance -ComputerName $Computer Win32_UserProfile | Where-Object { $_.LocalPath -eq $Profile.LocalPath } | Remove-CimInstance
-                    Write-Host "The user profile $($Profile.LocalPath.split('\')[-1]) are now deleted!" -ForegroundColor Green
+                if ($Profile.Loaded -eq $True) {
+                    Write-Warning "The user profile $($Profile.LocalPath.split('\')[-1]) is loaded, can't delete it so skipping it!"
                 }
-                catch {
-                    Write-Error "Something went wrong when trying to delete the user profile $($Profile.LocalPath.split('\')[-1])"
-                    Write-Error "$($PSItem.Exception.Message)"
-                    continue
+                else {
+                    try {
+                        write-Host "Deleting user profile $($Profile.LocalPath.split('\')[-1])..."
+                        Get-CimInstance -ComputerName $Computer Win32_UserProfile | Where-Object { $_.LocalPath -eq $Profile.LocalPath } | Remove-CimInstance
+                        Write-Host "The user profile $($Profile.LocalPath.split('\')[-1]) are now deleted!" -ForegroundColor Green
+                    }
+                    catch {
+                        Write-Error "Something went wrong when trying to delete the user profile $($Profile.LocalPath.split('\')[-1])"
+                        Write-Error "$($PSItem.Exception.Message)"
+                        continue
+                    }
                 }
             }
         }
