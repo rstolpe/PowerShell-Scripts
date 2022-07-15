@@ -9,9 +9,9 @@ All of the Windows scripts are stored in the [Windows folder](https://github.com
 
 - [Get-UserProfiles](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Get-UserProfiles.md)  
     This function will let you show all of the user profiles that are stored on a local or remote computer, you can also delete one specific user profile or all of them.
-- [AD-Tool](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/AD-Tool.md)
-    - With this script you can troubleshoot ADUser accounts.
-- [Windows-Maintenance](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Windows-Maintenance.md)
-    - With this script it automate maintenance for Windows 10 and 11 for example running Windows Update, deleting tempfiles and folders and much more.
-- [Find-NeededModules](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Find-NeededModules.md)
-    - This function are making sure that the needed modules are installed, up to date and imported.
+- [AD-Tool](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/AD-Tool.md)  
+    With this script you can troubleshoot ADUser accounts.
+- [Windows-Maintenance](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Windows-Maintenance.md)  
+    With this script it automate maintenance for Windows 10 and 11 for example running Windows Update, deleting tempfiles and folders and much more.
+- [Find-NeededModules](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Find-NeededModules.md)  
+    This function are making sure that the needed modules are installed, up to date and imported.
