@@ -5,7 +5,9 @@ I also use to post videos of the script running at my [YouTube Channel](https://
 ### Links
 - [Report bug, issue, improvement request or request new script](https://github.com/rstolpe/PowerShell-Scripts/issues/new/choose)
 - [Guide, Active WinRM with GPO](https://stolpe.io/enable-winrm-with-gpo/)
-## Windows scripts
+- [Blog](https://stolpe.io)
+## Scripts
+### Windows
 All of the Windows scripts are stored in the [Windows folder](https://github.com/rstolpe/PowerShell-Scripts/tree/main/Windows) in this [repo](https://github.com/rstolpe/PowerShell-Scripts), you can find them [here](https://github.com/rstolpe/PowerShell-Scripts/tree/main/Windows)
 
 - [Get-UserProfiles](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Get-UserProfiles.md)  
