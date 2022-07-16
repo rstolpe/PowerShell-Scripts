@@ -18,7 +18,8 @@ Function Get-MonitorInformation {
         .SYNOPSIS
         Returns information about all the monitors that has been connected to the computer
         .DESCRIPTION
-        With this script you can get information about all of the monitors that has been connected to a local or remote computer
+        With this script you can get information about all of the monitors that has been connected to a local or remote computer.
+        You can also run this against multiple remote computers at the same time.
         .PARAMETER Computer
         If you want to run this against a remote computer you specify which computer with this parameter.
         .EXAMPLE
@@ -54,7 +55,7 @@ Function Get-MonitorInformation {
         }
         catch {
             Write-Error "$($PSItem.Exception)"
-            Break
+            Continue
         }
     }
 }
