@@ -25,20 +25,20 @@ Function Show-MonitorInformation {
         Show-MonitorInformation
         Returns the information about the monitors on the local computer
 
-        Show-MonitorInformation -Computer "Win11"
+        Show-MonitorInformation -ComputerName "Win11"
         Return information about the monitor on a remote computer named "Win11"
 
     #>
 
     [CmdletBinding()]
     Param(
-        [String]$Computer
+        [String]$ComputerName
     )
-    if ([string]::IsNullOrEmpty($Computer)) {
-        [string]$Computer = "localhost"
+    if ([string]::IsNullOrEmpty($ComputerName)) {
+        [string]$ComputerName = "localhost"
     }
     try {
-        Get-CimInstance -ComputerName $Computer -ClassName WmiMonitorID -Namespace root\wmi | Foreach-Object {
+        Get-CimInstance -ComputerName $ComputerName -ClassName WmiMonitorID -Namespace root\wmi | Foreach-Object {
             if ($null -ne $_) {
                 [PSCustomObject]@{
                     Active                = $_.Active

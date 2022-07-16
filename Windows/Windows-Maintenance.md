@@ -26,3 +26,4 @@ With this script it automate maintenance for Windows 10 and 11 for example runni
 - [YouTube video (PS 7.x)](https://youtu.be/Qm57XmfhTkg)
 - [Blog post](https://stolpe.io/windows-maintenance-script/)
 - [Report bug, issue, improvement request or request new script](https://github.com/rstolpe/PowerShell-Scripts/issues/new/choose)
+- [Main repo](https://github.com/rstolpe/PowerShell-Scripts)

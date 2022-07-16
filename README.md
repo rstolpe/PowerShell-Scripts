@@ -7,8 +7,8 @@ I also use to post videos of the script running at my [YouTube Channel](https://
 - [Guide, activate WinRM with GPO](https://stolpe.io/enable-winrm-with-gpo/)
 - [Blog](https://stolpe.io)
 ## Scripts
-### Windows
-All of the Windows scripts are stored in the [Windows folder](https://github.com/rstolpe/PowerShell-Scripts/tree/main/Windows) in this [repo](https://github.com/rstolpe/PowerShell-Scripts), you can find them [here](https://github.com/rstolpe/PowerShell-Scripts/tree/main/Windows)
+### [Windows](https://github.com/rstolpe/PowerShell-Scripts/tree/main/Windows)
+All of the Windows scripts are stored in the [Windows folder](https://github.com/rstolpe/PowerShell-Scripts/tree/main/Windows) in this [repo](https://github.com/rstolpe/PowerShell-Scripts)
 
 - [Get-UserProfiles](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Get-UserProfiles.md)  
     This function will let you show all of the user profiles that are stored on a local or remote computer, you can also delete one specific user profile or all of them.

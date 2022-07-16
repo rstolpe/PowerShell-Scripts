@@ -30,24 +30,24 @@ Function Get-UserProfiles {
         Get-UserProfiles -ExcludedProfiles @("Frank", "rstolpe")
         This will show all of the user profiles stored on the local machine except user profiles that are named Frank and rstolpe
 
-        Get-UserProfiles -Computer "Win11-Test"
+        Get-UserProfiles -ComputerName "Win11-Test"
         This will show all of the user profiles stored on the remote computer "Win11-test"
 
-        Get-UserProfiles -Computer "Win11-Test" -ExcludedProfiles @("Frank", "rstolpe")
+        Get-UserProfiles -ComputerName "Win11-Test" -ExcludedProfiles @("Frank", "rstolpe")
         This will show all of the user profiles stored on the remote computer "Win11-Test" except user profiles that are named Frank and rstolpe
     #>
 
     [CmdletBinding()]
     Param(
-        [string]$Computer,
+        [string]$ComputerName,
         [array]$ExcludedProfiles
     )
-    if ([string]::IsNullOrEmpty($Computer)) {
-        [string]$Computer = "localhost"
+    if ([string]::IsNullOrEmpty($ComputerName)) {
+        [string]$ComputerName = "localhost"
     }
 
     try {
-        Get-CimInstance -ComputerName $Computer -className Win32_UserProfile | Where-Object { (-Not ($_.Special)) } | Foreach-Object {
+        Get-CimInstance -ComputerName $ComputerName -className Win32_UserProfile | Where-Object { (-Not ($_.Special)) } | Foreach-Object {
             if (-Not ($_.LocalPath.split('\')[-1] -in $ExcludedProfiles)) {
                 [PSCustomObject]@{
                     'UserName'               = $_.LocalPath.split('\')[-1]
@@ -88,29 +88,29 @@ Function Remove-UserProfile {
         Remove-UserProfile -ProfileToDelete @("User1", "User2")
         This will delete only user profile "User1" and "User2" from the local computer where you run the script from.
 
-        Remove-UserProfile -Computer "Win11-test" -DeleteAll
+        Remove-UserProfile -ComputerName "Win11-test" -DeleteAll
         This will delete all of the user profiles on the remote computer named "Win11-Test"
 
-        Remove-UserProfile -Computer "Win11-test" -ExcludedProfiles @("User1", "User2") -DeleteAll
+        Remove-UserProfile -ComputerName "Win11-test" -ExcludedProfiles @("User1", "User2") -DeleteAll
         This will delete all of the user profiles except user profile User1 and User2 on the remote computer named "Win11-Test"
 
-        Remove-UserProfile -Computer "Win11-test" -ProfileToDelete @("User1", "User2")
+        Remove-UserProfile -ComputerName "Win11-test" -ProfileToDelete @("User1", "User2")
         This will delete only user profile "User1" and "User2" from the remote computer named "Win11-Test"
 
     #>
 
     [CmdletBinding()]
     Param(
-        [string]$Computer,
+        [string]$ComputerName,
         [array]$ProfileToDelete,
         [switch]$DeleteAll,
         [array]$ExcludedProfiles
     )
-    if ([string]::IsNullOrEmpty($Computer)) {
-        [string]$Computer = "localhost"
+    if ([string]::IsNullOrEmpty($ComputerName)) {
+        [string]$ComputerName = "localhost"
     }
 
-    $AllUserProfiles = Get-CimInstance -ComputerName $Computer -className Win32_UserProfile | Where-Object { (-Not ($_.Special)) } | Select-Object LocalPath, Loaded
+    $AllUserProfiles = Get-CimInstance -ComputerName $ComputerName -className Win32_UserProfile | Where-Object { (-Not ($_.Special)) } | Select-Object LocalPath, Loaded
 
     if ($DeleteAll -eq $True) {
         foreach ($Profile in $AllUserProfiles) {
@@ -124,7 +124,7 @@ Function Remove-UserProfile {
                 else {
                     try {
                         write-Host "Deleting user profile $($Profile.LocalPath.split('\')[-1])..."
-                        Get-CimInstance -ComputerName $Computer Win32_UserProfile | Where-Object { $_.LocalPath -eq $Profile.LocalPath } | Remove-CimInstance
+                        Get-CimInstance -ComputerName $ComputerName Win32_UserProfile | Where-Object { $_.LocalPath -eq $Profile.LocalPath } | Remove-CimInstance
                         Write-Host "The user profile $($Profile.LocalPath.split('\')[-1]) are now deleted!" -ForegroundColor Green
                     }
                     catch {
@@ -142,7 +142,7 @@ Function Remove-UserProfile {
                 # check if the userprofile are loaded and if it is show warning
                 try {
                     write-Host "Deleting user profile $($user)..."
-                    Get-CimInstance -ComputerName $Computer Win32_UserProfile | Where-Object { $_.LocalPath -eq "$env:SystemDrive\Users\$($user)" } | Remove-CimInstance
+                    Get-CimInstance -ComputerName $ComputerName Win32_UserProfile | Where-Object { $_.LocalPath -eq "$env:SystemDrive\Users\$($user)" } | Remove-CimInstance
                     Write-Host "The user profile $($user) are now deleted!" -ForegroundColor Green
                 }
                 catch {
@@ -152,7 +152,7 @@ Function Remove-UserProfile {
                 }
             }
             else {
-                Write-Warning "$($user) did not have any user profile on $($Computer)!"
+                Write-Warning "$($user) did not have any user profile on $($ComputerName)!"
             }
         }
     }

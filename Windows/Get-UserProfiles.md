@@ -17,3 +17,4 @@ This function will let you show all of the user profiles that are stored on a lo
 - [Blog post](https://stolpe.io/script-to-delete-user-profiles-from-local-and-remote-computer/)
 - [Report bug, issue, improvement request or request new script](https://github.com/rstolpe/PowerShell-Scripts/issues/new/choose)
 - [Guide, activate WinRM with GPO](https://stolpe.io/enable-winrm-with-gpo/)
+- [Main repo](https://github.com/rstolpe/PowerShell-Scripts)

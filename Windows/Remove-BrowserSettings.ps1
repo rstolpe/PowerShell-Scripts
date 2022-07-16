@@ -40,10 +40,10 @@ function Remove-BrowserSettings {
         Remove-BrowserSettings -ListUsers
         This will list all of the user profiles that are on the local computer
 
-        Remove-BrowserSettings -Computer "Win11" -ListUsers
+        Remove-BrowserSettings -ComputerName "Win11" -ListUsers
         This will list all fo the user profiles that are on the remote computer named "Win11"
 
-        Remove-BrowserSettings -Computer "Win11" -UserName "Robin" -Edge
+        Remove-BrowserSettings -ComputerName "Win11" -UserName "Robin" -Edge
         This will delete Edge settings for the user Robin on remote computer "Win11", if you want to delete Chrome settings just
         replace -Edge with -Chrome
 
@@ -55,7 +55,7 @@ function Remove-BrowserSettings {
 
     [CmdletBinding()]
     Param(
-        [string]$Computer,
+        [string]$ComputerName,
         [string]$UserName,
         [switch]$Edge,
         [switch]$Chrome,
@@ -75,8 +75,8 @@ function Remove-BrowserSettings {
         throw "You can't delete both Edge and Chrome at the same time!"
     }
 
-    if ([string]::IsNullOrEmpty($Computer)) {
-        [string]$Computer = "localhost"
+    if ([string]::IsNullOrEmpty($ComputerName)) {
+        [string]$ComputerName = "localhost"
     }
     if ($Edge -eq $True) {
         $Browser = "Microsoft\Edge"
@@ -87,17 +87,17 @@ function Remove-BrowserSettings {
         $BrowserProcess = "chrome.exe"
     }
 
-    $GetAllUsers = (Get-CimInstance -ComputerName $Computer -className Win32_UserProfile | Where-Object { (-Not ($_.Special)) } | Select-Object LocalPath | foreach-object { $_.LocalPath.split('\')[-1] })
+    $GetAllUsers = (Get-CimInstance -ComputerName $ComputerName -className Win32_UserProfile | Where-Object { (-Not ($_.Special)) } | Select-Object LocalPath | foreach-object { $_.LocalPath.split('\')[-1] })
 
     if ($ListUsers -eq $true) {
-        Write-Host "The following user profiles exists on $($Computer):`n"
+        Write-Host "The following user profiles exists on $($ComputerName):`n"
         $GetAllUsers
     }
     else {
         if ($UserName -in $GetAllUsers) {
             try {
                 # Setting up CIMSession to kill all the chrome.exe process.
-                $CimSession = New-CimSession -ComputerName $Computer
+                $CimSession = New-CimSession -ComputerName $ComputerName
                 Write-Host "Stopping all of the active $($BrowserProcess)..."
                 $ChromeProcess = Get-CimInstance -CimSession $CimSession -Class Win32_Process -Property Name | where-object { $_.name -eq "$($BrowserProcess)" }
                 if ($Null -ne $ChromeProcess) {
@@ -115,7 +115,7 @@ function Remove-BrowserSettings {
                 Write-Host "Starting to delete all browser settings..."
 
                 # Deleting Chrome/Edge folder in the user profile but before that it copy the bookmarks to C:\Temp and then back to the correct folder so the bookmarks don't get lost.
-                Invoke-Command -ComputerName $Computer -Scriptblock {
+                Invoke-Command -ComputerName $ComputerName -Scriptblock {
                     Param(
                         $UserName,
                         $Browser
@@ -151,7 +151,7 @@ function Remove-BrowserSettings {
             }
         }
         else {
-            Write-Warning "$($UserName) don't have a user profile on $($Computer), see list below for all the user profiles that exists:`n"
+            Write-Warning "$($UserName) don't have a user profile on $($ComputerName), see list below for all the user profiles that exists:`n"
             $GetAllUsers
         }
     }

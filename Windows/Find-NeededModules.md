@@ -14,3 +14,4 @@ This function are making sure that the needed modules are installed, up to date 
 - [Script file](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Find-NeededModules.ps1)
 - [Blog post](https://stolpe.io/made-a-function-to-verify-modules/)
 - [Report bug, issue, improvement request or request new script](https://github.com/rstolpe/PowerShell-Scripts/issues/new/choose)
+- [Main repo](https://github.com/rstolpe/PowerShell-Scripts)

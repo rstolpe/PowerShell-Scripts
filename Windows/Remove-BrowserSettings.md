@@ -12,3 +12,4 @@ This function let you delete Edge or Chrome settings for a specific user from bo
 - [Blog post](https://stolpe.io/delete-edge-or-chrome-settings-on-remote-or-local-computer/)
 - [Report bug, issue, improvement request or request new script](https://github.com/rstolpe/PowerShell-Scripts/issues/new/choose)
 - [Guide, activate WinRM with GPO](https://stolpe.io/enable-winrm-with-gpo/)
+- [Main repo](https://github.com/rstolpe/PowerShell-Scripts)

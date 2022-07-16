@@ -20,3 +20,4 @@ Checking if the user/users are disabled if the user/users are disabled the scrip
 - [YouTube video](https://youtu.be/IVy4IBaB_qM)
 - [Blog post](https://stolpe.io/created-a-adtool-in-powershell/)
 - [Report bug, issue, improvement request or request new script](https://github.com/rstolpe/PowerShell-Scripts/issues/new/choose)
+- [Main repo](https://github.com/rstolpe/PowerShell-Scripts)

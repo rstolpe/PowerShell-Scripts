@@ -14,3 +14,4 @@ This function will return information about the monitor from either local or rem
 - [Blog post](https://stolpe.io/information-about-connected-monitor/)
 - [Report bug, issue, improvement request or request new script](https://github.com/rstolpe/PowerShell-Scripts/issues/new/choose)
 - [Guide, activate WinRM with GPO](https://stolpe.io/enable-winrm-with-gpo/)
+- [Main repo](https://github.com/rstolpe/PowerShell-Scripts)
