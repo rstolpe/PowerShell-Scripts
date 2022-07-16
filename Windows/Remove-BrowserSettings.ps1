@@ -102,14 +102,14 @@ function Remove-BrowserSettings {
     else {
         # Setting up CIMSession and killing the browser process
         try {
-            Write-Host "Trying to stopping all of the active $($BrowserProcessName) processes..."
+            Write-Host "Trying to stop all of the active $($BrowserProcessName) processes..."
             $BrowserProcess = Get-CimInstance -ComputerName $ComputerName -Class Win32_Process -Property Name | where-object { $_.name -eq "$($BrowserProcessName)" }
             if ($Null -ne $BrowserProcess) {
                 [void]($BrowserProcess | Invoke-CimMethod -MethodName Terminate)
                 Write-Host "All $($BrowserProcessName) processes has now been stopped!" -ForegroundColor Green
             }
             else {
-                Write-Host "Could not stop $($BrowserProcessName) processes no process are running!" -ForegroundColor Yellow
+                Write-Host "Could not stop $($BrowserProcessName) processes because no process are running!" -ForegroundColor Yellow
             }
         }
         catch {
