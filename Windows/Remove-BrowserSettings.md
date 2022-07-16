@@ -7,6 +7,8 @@ This function let you delete Edge or Chrome settings for a specific user or user
 - It saves the bookmarks to C:\Temp before it deletes the settings and then restore them after.
 - You can delete the settings for multiple users at the same time.
 
+If you use this function on a remote computer you need to make sure that you have [WinRM](https://stolpe.io/enable-winrm-with-gpo/) activated.
+
 ### Links
 - [Readme](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Remove-BrowserSettings.md)  
 - [Script file](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Remove-BrowserSettings.ps1)
