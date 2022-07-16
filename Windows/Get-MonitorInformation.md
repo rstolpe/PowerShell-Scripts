@@ -1,4 +1,4 @@
-﻿# Show-MonitorInformation
+﻿# Get-MonitorInformation
 This function will return information about the monitor from either local or remote computer.   
 ### This script will return the following information
 - Is the monitor active? (connected)
