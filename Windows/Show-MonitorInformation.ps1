@@ -42,15 +42,13 @@ Function Show-MonitorInformation {
         try {
             Write-Host "`n== Monitor information from $($Computer) ==`n"
             Get-CimInstance -ComputerName $Computer -ClassName WmiMonitorID -Namespace root\wmi | Foreach-Object {
-                if ($null -ne $_) {
-                    [PSCustomObject]@{
-                        Active                = $_.Active
-                        'Manufacturer Name'   = ($_.Manufacturername | ForEach-Object { [char]$_ }) -join ""
-                        'Model'               = ($_.UserFriendlyName | ForEach-Object { [char]$_ }) -join ""
-                        'Serial Number'       = ($_.SerialNumberID | ForEach-Object { [char]$_ }) -join ""
-                        'Year Of Manufacture' = $_.YearOfManufacture
-                        'Week Of Manufacture' = $_.WeekOfManufacture
-                    }
+                [PSCustomObject]@{
+                    Active                = $_.Active
+                    'Manufacturer Name'   = ($_.Manufacturername | ForEach-Object { [char]$_ }) -join ""
+                    'Model'               = ($_.UserFriendlyName | ForEach-Object { [char]$_ }) -join ""
+                    'Serial Number'       = ($_.SerialNumberID | ForEach-Object { [char]$_ }) -join ""
+                    'Year Of Manufacture' = $_.YearOfManufacture
+                    'Week Of Manufacture' = $_.WeekOfManufacture
                 }
             }
         }
