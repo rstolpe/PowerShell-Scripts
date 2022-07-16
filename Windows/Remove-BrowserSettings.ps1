@@ -102,16 +102,14 @@ function Remove-BrowserSettings {
     else {
         # Setting up CIMSession and killing the browser process
         try {
-            $CimSession = New-CimSession -ComputerName $ComputerName
             Write-Host "Trying to stopping all of the active $($BrowserProcessName) processes..."
-            $BrowserProcess = Get-CimInstance -CimSession $CimSession -Class Win32_Process -Property Name | where-object { $_.name -eq "$($BrowserProcessName)" }
+            $BrowserProcess = Get-CimInstance -ComputerName $ComputerName -Class Win32_Process -Property Name | where-object { $_.name -eq "$($BrowserProcessName)" }
             if ($Null -ne $BrowserProcess) {
                 [void]($BrowserProcess | Invoke-CimMethod -MethodName Terminate)
-                Remove-CimSession -InstanceId $CimSession.InstanceId
                 Write-Host "All $($BrowserProcessName) processes has now been stopped!" -ForegroundColor Green
             }
             else {
-                Write-Host "Could not stop $($BrowserProcessName) processes because they did not exist!" -ForegroundColor Red
+                Write-Host "Could not stop $($BrowserProcessName) processes no process are running!" -ForegroundColor Yellow
             }
         }
         catch {
@@ -134,11 +132,11 @@ function Remove-BrowserSettings {
                     $BookmarkFolderPath = "$env:SystemDrive\Users\$($User)\AppData\Local\$($BrowserAddPath)\User Data\Default\"
 
                     if (-Not(Test-Path -Path $BrowserPath)) {
-                        Write-Host "Can't delete $($Browser) settings for $($user) because it's nothing there to delete!" -ForegroundColor Red
+                        Write-Host "Can't delete $($Browser) settings for $($user) because it's nothing there to delete!" -ForegroundColor Yellow
                         Break
                     }
 
-                    Write-Host "Backing up the bookmarks for $($Browser)..."
+                    Write-Host "Trying to backup the bookmarks for $($Browser)..."
                     try {
                         if (Test-Path -Path $BookmarkPath -PathType Leaf) {
                             if (Test-Path -Path "$env:SystemDrive\Temp") {
@@ -151,7 +149,7 @@ function Remove-BrowserSettings {
                             Write-Host "Bookmarks for $($Browser) has been backed up!" -ForegroundColor Green
                         }
                         else {
-                            Write-Host "Could not backup bookmarks as it did'nt exist!" -ForegroundColor Red
+                            Write-Host "Could not backup bookmarks as it did'nt exist!" -ForegroundColor Yellow
                         }
                     }
                     catch {
@@ -185,7 +183,7 @@ function Remove-BrowserSettings {
                         Break
                     }
                 } -ArgumentList $User, $Browser, $BrowserAddPath
-                Write-Host "The script process for $($User) is complete!" -ForegroundColor Green
+                Write-Host "The script run for $($User) is complete!" -ForegroundColor Green
             }
             else {
                 Write-Warning "$($User) don't have a user profile on $($ComputerName)!"
