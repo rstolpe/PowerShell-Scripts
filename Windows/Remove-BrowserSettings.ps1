@@ -43,12 +43,20 @@ function Remove-BrowserSettings {
         Remove-BrowserSettings -ComputerName "Win11" -ListUsers
         This will list all fo the user profiles that are on the remote computer named "Win11"
 
+        Remove-BrowserSettings -UserName "Robin" -Edge
+        This will delete Edge settings for the user Robin on local computer, if you want to delete Chrome settings just
+        replace -Edge with -Chrome
+
+        Remove-BrowserSettings -UserName "Robin,Adam" -Edge
+        This will delete Edge settings for the user Robin and Adam on the local, if you want to delete Chrome settings just
+        replace -Edge with -Chrome
+
         Remove-BrowserSettings -ComputerName "Win11" -UserName "Robin" -Edge
         This will delete Edge settings for the user Robin on remote computer "Win11", if you want to delete Chrome settings just
         replace -Edge with -Chrome
 
-        Remove-BrowserSettings -UserName "Robin" -Edge
-        This will delete Edge settings for the user Robin on local computer, if you want to delete Chrome settings just
+        Remove-BrowserSettings -ComputerName "Win11" -UserName "Robin,Adam" -Edge
+        This will delete Edge settings for the user Robin and Adam on the remote computer named "Win11", if you want to delete Chrome settings just
         replace -Edge with -Chrome
 
     #>
@@ -69,19 +77,18 @@ function Remove-BrowserSettings {
         if ($Edge -eq $False -and $Chrome -eq $False) {
             throw "You must either delete Chrome or Edge"
         }
-    }
+        if ($Edge -eq $True -and $Chrome -eq $True) {
+            throw "You can't delete both Edge and Chrome at the same time!"
+        }
 
-    if ($Edge -eq $True -and $Chrome -eq $True) {
-        throw "You can't delete both Edge and Chrome at the same time!"
-    }
-
-    if ($Edge -eq $True) {
-        $Browser = "Microsoft\Edge"
-        $BrowserProcess = "edge.exe"
-    }
-    if ($Chrome -eq $True) {
-        $Browser = "Google\Chrome"
-        $BrowserProcess = "chrome.exe"
+        if ($Edge -eq $True) {
+            $Browser = "Microsoft\Edge"
+            $BrowserProcess = "edge.exe"
+        }
+        if ($Chrome -eq $True) {
+            $Browser = "Google\Chrome"
+            $BrowserProcess = "chrome.exe"
+        }
     }
 
     $GetAllUsers = (Get-CimInstance -ComputerName $ComputerName -className Win32_UserProfile | Where-Object { (-Not ($_.Special)) } | Select-Object LocalPath | foreach-object { $_.LocalPath.split('\')[-1] })
@@ -91,63 +98,67 @@ function Remove-BrowserSettings {
         $GetAllUsers
     }
     else {
-        if ($UserName -in $GetAllUsers) {
-            try {
-                # Setting up CIMSession to kill all the chrome.exe process.
-                $CimSession = New-CimSession -ComputerName $ComputerName
-                Write-Host "Stopping all of the active $($BrowserProcess)..."
-                $ChromeProcess = Get-CimInstance -CimSession $CimSession -Class Win32_Process -Property Name | where-object { $_.name -eq "$($BrowserProcess)" }
-                if ($Null -ne $ChromeProcess) {
-                    [void]($ChromeProcess | Invoke-CimMethod -MethodName Terminate)
-                }
-                Remove-CimSession -InstanceId $CimSession.InstanceId
-                Write-Host "All $($BrowserProcess) are now stopped" -ForegroundColor Green
+        # Setting up CIMSession and killing the browser process
+        try {
+            $CimSession = New-CimSession -ComputerName $ComputerName
+            Write-Host "Stopping all of the active $($BrowserProcess)..."
+            $ChromeProcess = Get-CimInstance -CimSession $CimSession -Class Win32_Process -Property Name | where-object { $_.name -eq "$($BrowserProcess)" }
+            if ($Null -ne $ChromeProcess) {
+                [void]($ChromeProcess | Invoke-CimMethod -MethodName Terminate)
             }
-            catch {
-                Write-Host "$($PSItem.Exception)" -ForegroundColor Red
-                Break
-            }
-            try {
-                Write-Host "Starting to delete all browser settings..."
-
-                # Deleting Chrome/Edge folder in the user profile but before that it copy the bookmarks to C:\Temp and then back to the correct folder so the bookmarks don't get lost.
-                Invoke-Command -ComputerName $ComputerName -Scriptblock {
-                    Param(
-                        $UserName,
-                        $Browser
-                    )
-                    $BrowserPath = "$env:SystemDrive\Users\$($UserName)\AppData\Local\$($Browser)\User Data\"
-                    $BookmarkPath = "$env:SystemDrive\Users\$($UserName)\AppData\Local\$($Browser)\User Data\Default\Bookmarks"
-                    $BookmarkFolderPath = "$env:SystemDrive\Users\$($UserName)\AppData\Local\$($Browser)\User Data\Default\"
-
-                    if (Test-Path -Path $BookmarkPath -PathType Leaf) {
-                        if (Test-Path -Path "$env:SystemDrive\Temp") {
-                            Copy-Item $BookmarkPath -Destination "$env:SystemDrive\Temp"
-                        }
-                        else {
-                            New-Item -Path "$env:SystemDrive\" -Name "Temp" -ItemType "directory" > $Null
-                            Copy-Item $BookmarkPath -Destination "$env:SystemDrive\Temp"
-                        }
-                    }
-
-                    if (Test-Path -Path $BrowserPath) {
-                        Remove-Item $BrowserPath -Recurse -Force
-                    }
-                    if (Test-Path -Path "$env:SystemDrive\Temp\Bookmarks"-PathType Leaf) {
-                        New-Item -ItemType Directory -Force -Path $BookmarkFolderPath
-                        Copy-Item "$env:SystemDrive\Temp\Bookmarks" -Destination $BookmarkFolderPath
-                        Remove-Item "$env:SystemDrive\Temp\Bookmarks" -Recurse -Force
-                    }
-                } -ArgumentList $UserName, $Browser
-            }
-            catch {
-                Write-Host "$($PSItem.Exception)" -ForegroundColor Red
-                Break
-            }
+            Remove-CimSession -InstanceId $CimSession.InstanceId
+            Write-Host "All $($BrowserProcess) are now stopped" -ForegroundColor Green
         }
-        else {
-            Write-Warning "$($UserName) don't have a user profile on $($ComputerName), see list below for all the user profiles that exists:`n"
-            $GetAllUsers
+        catch {
+            Write-Host "$($PSItem.Exception)" -ForegroundColor Red
+            Break
+        }
+        # Looping trough the UserNames to make sure it has a profile on the computer
+        # Add loop for multiple users!
+        foreach ($User in $UserName.Split(",").Trim()) {
+            if ($User -in $GetAllUsers) {
+                try {
+                    Write-Host "Starting to delete all browser settings..."
+
+                    # Deleting Chrome/Edge folder in the user profile but before that it copy the bookmarks to C:\Temp and then back to the correct folder so the bookmarks don't get lost.
+                    Invoke-Command -ComputerName $ComputerName -Scriptblock {
+                        Param(
+                            $User,
+                            $Browser
+                        )
+                        $BrowserPath = "$env:SystemDrive\Users\$($User)\AppData\Local\$($Browser)\User Data\"
+                        $BookmarkPath = "$env:SystemDrive\Users\$($User)\AppData\Local\$($Browser)\User Data\Default\Bookmarks"
+                        $BookmarkFolderPath = "$env:SystemDrive\Users\$($User)\AppData\Local\$($Browser)\User Data\Default\"
+
+                        if (Test-Path -Path $BookmarkPath -PathType Leaf) {
+                            if (Test-Path -Path "$env:SystemDrive\Temp") {
+                                Copy-Item $BookmarkPath -Destination "$env:SystemDrive\Temp"
+                            }
+                            else {
+                                New-Item -Path "$env:SystemDrive\" -Name "Temp" -ItemType "directory" > $Null
+                                Copy-Item $BookmarkPath -Destination "$env:SystemDrive\Temp"
+                            }
+                        }
+
+                        if (Test-Path -Path $BrowserPath) {
+                            Remove-Item $BrowserPath -Recurse -Force
+                        }
+                        if (Test-Path -Path "$env:SystemDrive\Temp\Bookmarks"-PathType Leaf) {
+                            New-Item -ItemType Directory -Force -Path $BookmarkFolderPath
+                            Copy-Item "$env:SystemDrive\Temp\Bookmarks" -Destination $BookmarkFolderPath
+                            Remove-Item "$env:SystemDrive\Temp\Bookmarks" -Recurse -Force
+                        }
+                    } -ArgumentList $User, $Browser
+                }
+                catch {
+                    Write-Host "$($PSItem.Exception)" -ForegroundColor Red
+                    Break
+                }
+            }
+            else {
+                Write-Warning "$($User) don't have a user profile on $($ComputerName)!"
+                Continue
+            }
         }
     }
 }
