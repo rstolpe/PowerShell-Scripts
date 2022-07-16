@@ -28,31 +28,35 @@ Function Show-MonitorInformation {
         Show-MonitorInformation -ComputerName "Win11"
         Return information about the monitor on a remote computer named "Win11"
 
+        Show-MonitorInformation -ComputerName "Win10,Win11"
+        Return information about the monitor from both remote computer named Win10 and Win11
+
     #>
 
     [CmdletBinding()]
     Param(
-        [String]$ComputerName
+        [String]$ComputerName = "localhost"
     )
-    if ([string]::IsNullOrEmpty($ComputerName)) {
-        [string]$ComputerName = "localhost"
-    }
-    try {
-        Get-CimInstance -ComputerName $ComputerName -ClassName WmiMonitorID -Namespace root\wmi | Foreach-Object {
-            if ($null -ne $_) {
-                [PSCustomObject]@{
-                    Active                = $_.Active
-                    'Manufacturer Name'   = ($_.Manufacturername | ForEach-Object { [char]$_ }) -join ""
-                    'Model'               = ($_.UserFriendlyName | ForEach-Object { [char]$_ }) -join ""
-                    'Serial Number'       = ($_.SerialNumberID | ForEach-Object { [char]$_ }) -join ""
-                    'Year Of Manufacture' = $_.YearOfManufacture
-                    'Week Of Manufacture' = $_.WeekOfManufacture
+
+    foreach ($Computer in $ComputerName.Split(",").Trim()) {
+        try {
+            Write-Host "`n== Monitor information from $($Computer) ==`n"
+            Get-CimInstance -ComputerName $Computer -ClassName WmiMonitorID -Namespace root\wmi | Foreach-Object {
+                if ($null -ne $_) {
+                    [PSCustomObject]@{
+                        Active                = $_.Active
+                        'Manufacturer Name'   = ($_.Manufacturername | ForEach-Object { [char]$_ }) -join ""
+                        'Model'               = ($_.UserFriendlyName | ForEach-Object { [char]$_ }) -join ""
+                        'Serial Number'       = ($_.SerialNumberID | ForEach-Object { [char]$_ }) -join ""
+                        'Year Of Manufacture' = $_.YearOfManufacture
+                        'Week Of Manufacture' = $_.WeekOfManufacture
+                    }
                 }
             }
         }
-    }
-    catch {
-        Write-Error "$($PSItem.Exception)"
-        Break
+        catch {
+            Write-Error "$($PSItem.Exception)"
+            Break
+        }
     }
 }
