@@ -50,7 +50,7 @@ Function Get-MonitorInformation {
                     'Year Of Manufacture' = $_.YearOfManufacture
                     'Week Of Manufacture' = $_.WeekOfManufacture
                 }
-            }
+            } | Format-Table
         }
         catch {
             Write-Error "$($PSItem.Exception)"

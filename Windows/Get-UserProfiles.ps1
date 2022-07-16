@@ -18,7 +18,8 @@ Function Get-UserProfiles {
         .SYNOPSIS
         Shows all user profiles that are stored on a computer
         .DESCRIPTION
-        Shows all user profiles that are stored on a local or remote computer and you can also delete one or all of the user profiles, the special windows profiles are excluded
+        Shows all user profiles that are stored on a local or remote computer and you can also delete one or all of the user profiles, the special windows profiles are excluded.
+        You can also show all user profiles from multiple computers at the same time.
         .PARAMETER Computer
         The name of the remote computer you want to display all of the user profiles from. If you want to use it on a local computer you don't need to fill this one out.
         .PARAMETER ExcludedProfiles
@@ -33,6 +34,9 @@ Function Get-UserProfiles {
         Get-UserProfiles -ComputerName "Win11-Test"
         This will show all of the user profiles stored on the remote computer "Win11-test"
 
+        Get-UserProfiles -ComputerName "Win11-Test, Win10"
+        This will show all of the user profiles stored on the remote computers Win11-Test and Win10
+
         Get-UserProfiles -ComputerName "Win11-Test" -ExcludedProfiles @("Frank", "rstolpe")
         This will show all of the user profiles stored on the remote computer "Win11-Test" except user profiles that are named Frank and rstolpe
     #>
@@ -42,25 +46,25 @@ Function Get-UserProfiles {
         [string]$ComputerName = "localhost",
         [array]$ExcludedProfiles
     )
-    #foreach ($Computer in $ComputerName.Split(",").Trim()) {
-    Write-Host "`n== All profiles on $($ComputerName) ==`n"
-    try {
-        Get-CimInstance -ComputerName $ComputerName -className Win32_UserProfile | Where-Object { (-Not ($_.Special)) } | Foreach-Object {
-            if (-Not ($_.LocalPath.split('\')[-1] -in $ExcludedProfiles)) {
-                [PSCustomObject]@{
-                    'UserName'               = $_.LocalPath.split('\')[-1]
-                    'Profile path'           = $_.LocalPath
-                    'Last used'              = ($_.LastUseTime -as [DateTime]).ToString("yyyy-MM-dd HH:mm")
-                    'Is the profile active?' = $_.Loaded
+    foreach ($Computer in $ComputerName.Split(",").Trim()) {
+        Write-Host "`n== All profiles on $($Computer ) ==`n"
+        try {
+            Get-CimInstance -ComputerName $Computer -className Win32_UserProfile | Where-Object { (-Not ($_.Special)) } | Foreach-Object {
+                if (-Not ($_.LocalPath.split('\')[-1] -in $ExcludedProfiles)) {
+                    [PSCustomObject]@{
+                        'UserName'               = $_.LocalPath.split('\')[-1]
+                        'Profile path'           = $_.LocalPath
+                        'Last used'              = ($_.LastUseTime -as [DateTime]).ToString("yyyy-MM-dd HH:mm")
+                        'Is the profile active?' = $_.Loaded
+                    }
                 }
-            }
+            } | Format-Table
+        }
+        catch {
+            Write-Host "$($PSItem.Exception)"
+            break
         }
     }
-    catch {
-        Write-Host "$($PSItem.Exception)"
-        break
-    }
-    #}
 }
 
 Function Remove-UserProfile {
