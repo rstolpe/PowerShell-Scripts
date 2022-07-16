@@ -21,4 +21,4 @@ All of the Windows scripts are stored in the [Windows folder](https://github.com
 - [Get-MonitorInformation](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Get-MonitorInformation.md)  
     Returns information about all the monitors that has been connected to the local or remote computer
 - [Remove-BrowserSettings](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Remove-BrowserSettings.md)  
-    This function let you delete Edge or Chrome settings for a specific user from both local and remote computer. 
+    This function let you delete Edge or Chrome settings for a specific user or users from either local or remote computer. 
