@@ -55,7 +55,7 @@ function Remove-BrowserSettings {
 
     [CmdletBinding()]
     Param(
-        [string]$ComputerName,
+        [string]$ComputerName = "localhost",
         [string]$UserName,
         [switch]$Edge,
         [switch]$Chrome,
@@ -75,9 +75,6 @@ function Remove-BrowserSettings {
         throw "You can't delete both Edge and Chrome at the same time!"
     }
 
-    if ([string]::IsNullOrEmpty($ComputerName)) {
-        [string]$ComputerName = "localhost"
-    }
     if ($Edge -eq $True) {
         $Browser = "Microsoft\Edge"
         $BrowserProcess = "edge.exe"
