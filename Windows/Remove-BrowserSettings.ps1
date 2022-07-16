@@ -82,12 +82,14 @@ function Remove-BrowserSettings {
         }
 
         if ($Edge -eq $True) {
-            $Browser = "Microsoft\Edge"
-            $BrowserProcess = "edge.exe"
+            $Browser = "Microsoft Edge"
+            $BrowserAddPath = "Microsoft\Edge"
+            $BrowserProcessName = "msedge.exe"
         }
         if ($Chrome -eq $True) {
-            $Browser = "Google\Chrome"
-            $BrowserProcess = "chrome.exe"
+            $Browser = "Google Chrome"
+            $BrowserAddPath = "Google\Chrome"
+            $BrowserProcessName = "chrome.exe"
         }
     }
 
@@ -101,13 +103,13 @@ function Remove-BrowserSettings {
         # Setting up CIMSession and killing the browser process
         try {
             $CimSession = New-CimSession -ComputerName $ComputerName
-            Write-Host "Stopping all of the active $($BrowserProcess)..."
-            $ChromeProcess = Get-CimInstance -CimSession $CimSession -Class Win32_Process -Property Name | where-object { $_.name -eq "$($BrowserProcess)" }
-            if ($Null -ne $ChromeProcess) {
-                [void]($ChromeProcess | Invoke-CimMethod -MethodName Terminate)
+            Write-Host "Stopping all of the active $($BrowserProcessName)..."
+            $BrowserProcess = Get-CimInstance -CimSession $CimSession -Class Win32_Process -Property Name | where-object { $_.name -eq "$($BrowserProcessName)" }
+            if ($Null -ne $BrowserProcess) {
+                [void]($BrowserProcess | Invoke-CimMethod -MethodName Terminate)
             }
             Remove-CimSession -InstanceId $CimSession.InstanceId
-            Write-Host "All $($BrowserProcess) are now stopped" -ForegroundColor Green
+            Write-Host "All $($BrowserProcessName) are now stopped" -ForegroundColor Green
         }
         catch {
             Write-Host "$($PSItem.Exception)" -ForegroundColor Red
@@ -116,19 +118,19 @@ function Remove-BrowserSettings {
         # Looping trough the UserNames to make sure it has a profile on the computer
         foreach ($User in $UserName.Split(",").Trim()) {
             if ($User -in $GetAllUsers) {
-                try {
-                    Write-Host "Starting to delete all browser settings for $($User)..."
+                # Deleting Chrome/Edge folder in the user profile but before that it copy the bookmarks to C:\Temp and then back to the correct folder so the bookmarks don't get lost.
+                Invoke-Command -ComputerName $ComputerName -Scriptblock {
+                    Param(
+                        $User,
+                        $Browser,
+                        $BrowserAddPath
+                    )
+                    $BrowserPath = "$env:SystemDrive\Users\$($User)\AppData\Local\$($BrowserAddPath)\User Data\"
+                    $BookmarkPath = "$env:SystemDrive\Users\$($User)\AppData\Local\$($BrowserAddPath)\User Data\Default\Bookmarks"
+                    $BookmarkFolderPath = "$env:SystemDrive\Users\$($User)\AppData\Local\$($BrowserAddPath)\User Data\Default\"
 
-                    # Deleting Chrome/Edge folder in the user profile but before that it copy the bookmarks to C:\Temp and then back to the correct folder so the bookmarks don't get lost.
-                    Invoke-Command -ComputerName $ComputerName -Scriptblock {
-                        Param(
-                            $User,
-                            $Browser
-                        )
-                        $BrowserPath = "$env:SystemDrive\Users\$($User)\AppData\Local\$($Browser)\User Data\"
-                        $BookmarkPath = "$env:SystemDrive\Users\$($User)\AppData\Local\$($Browser)\User Data\Default\Bookmarks"
-                        $BookmarkFolderPath = "$env:SystemDrive\Users\$($User)\AppData\Local\$($Browser)\User Data\Default\"
-
+                    Write-Host "Backing up the bookmarks for $($Browser)..."
+                    try {
                         if (Test-Path -Path $BookmarkPath -PathType Leaf) {
                             if (Test-Path -Path "$env:SystemDrive\Temp") {
                                 Copy-Item $BookmarkPath -Destination "$env:SystemDrive\Temp"
@@ -138,21 +140,40 @@ function Remove-BrowserSettings {
                                 Copy-Item $BookmarkPath -Destination "$env:SystemDrive\Temp"
                             }
                         }
-
+                        Write-Host "Bookmarks for $($Browser) has been backed up!" -ForegroundColor Green
+                    }
+                    catch {
+                        Write-Host "$($PSItem.Exception)" -ForegroundColor Red
+                        Break
+                    }
+                        
+                    Write-Host "Deleting all of the settings for $($Browser)..."
+                    try {
                         if (Test-Path -Path $BrowserPath) {
                             Remove-Item $BrowserPath -Recurse -Force
                         }
+                        Write-Host "All of the settings for $($Browser) has been deleted!" -ForegroundColor Green
+                    }
+                    catch {
+                        Write-Host "$($PSItem.Exception)" -ForegroundColor Red
+                        Break
+                    }
+
+                    Write-Host "Restoring the bookmark for $($Browser)..."
+                    try {
                         if (Test-Path -Path "$env:SystemDrive\Temp\Bookmarks"-PathType Leaf) {
                             New-Item -ItemType Directory -Force -Path $BookmarkFolderPath
                             Copy-Item "$env:SystemDrive\Temp\Bookmarks" -Destination $BookmarkFolderPath
                             Remove-Item "$env:SystemDrive\Temp\Bookmarks" -Recurse -Force
                         }
-                    } -ArgumentList $User, $Browser
-                }
-                catch {
-                    Write-Host "$($PSItem.Exception)" -ForegroundColor Red
-                    Break
-                }
+                        Write-Host "Bookmarks for $($Browser) has been restored!" -ForegroundColor Green
+                    }
+                    catch {
+                        Write-Host "$($PSItem.Exception)" -ForegroundColor Red
+                        Break
+                    }
+                } -ArgumentList $User, $Browser, $BrowserAddPath
+                Write-Host "Script is completed!" -ForegroundColor Green
             }
             else {
                 Write-Warning "$($User) don't have a user profile on $($ComputerName)!"
