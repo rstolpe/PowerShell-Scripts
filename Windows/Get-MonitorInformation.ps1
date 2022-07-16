@@ -13,7 +13,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #>
 
-Function Show-MonitorInformation {
+Function Get-MonitorInformation {
     <#
         .SYNOPSIS
         Returns information about all the monitors that has been connected to the computer
@@ -22,13 +22,13 @@ Function Show-MonitorInformation {
         .PARAMETER Computer
         If you want to run this against a remote computer you specify which computer with this parameter.
         .EXAMPLE
-        Show-MonitorInformation
+        Get-MonitorInformation
         Returns the information about the monitors on the local computer
 
-        Show-MonitorInformation -ComputerName "Win11"
+        Get-MonitorInformation -ComputerName "Win11"
         Return information about the monitor on a remote computer named "Win11"
 
-        Show-MonitorInformation -ComputerName "Win10,Win11"
+        Get-MonitorInformation -ComputerName "Win10,Win11"
         Return information about the monitor from both remote computer named Win10 and Win11
 
     #>

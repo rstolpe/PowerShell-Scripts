@@ -18,7 +18,7 @@ All of the Windows scripts are stored in the [Windows folder](https://github.com
     With this script it automate maintenance for Windows 10 and 11 for example running Windows Update, deleting tempfiles and folders and much more.
 - [Find-NeededModules](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Find-NeededModules.md)  
     This function are making sure that the needed modules are installed, up to date and imported.
-- [Show-MonitorInformation](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Show-MonitorInformation.md)  
+- [Get-MonitorInformation](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Get-MonitorInformation.md)  
     Returns information about all the monitors that has been connected to the local or remote computer
 - [Remove-BrowserSettings](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Remove-BrowserSettings.md)  
     This function let you delete Edge or Chrome settings for a specific user from both local and remote computer. 
