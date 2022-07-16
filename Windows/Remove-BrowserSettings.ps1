@@ -114,11 +114,10 @@ function Remove-BrowserSettings {
             Break
         }
         # Looping trough the UserNames to make sure it has a profile on the computer
-        # Add loop for multiple users!
         foreach ($User in $UserName.Split(",").Trim()) {
             if ($User -in $GetAllUsers) {
                 try {
-                    Write-Host "Starting to delete all browser settings..."
+                    Write-Host "Starting to delete all browser settings for $($User)..."
 
                     # Deleting Chrome/Edge folder in the user profile but before that it copy the bookmarks to C:\Temp and then back to the correct folder so the bookmarks don't get lost.
                     Invoke-Command -ComputerName $ComputerName -Scriptblock {
