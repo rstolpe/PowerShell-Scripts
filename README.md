@@ -1,11 +1,11 @@
 # PowerShell Scripts
-
-I’m writing some useful PowerShell Scripts from time to time and I’m collecting them in my [repo](https://github.com/rstolpe/PowerShell-Scripts) and also posting them at my [blog](https://stolpe.io).  
-I also use to post videos of the script running at my [YouTube Channel](https://www.youtube.com/channel/UClrIQN9SysVTEMPmxxn-p1w) and I have a dedicated [playlist](https://www.youtube.com/playlist?list=PLOdABThmxohswmbXjPadlpqdNiQxj9ZoP) for this [repo](https://github.com/rstolpe/PowerShell-Scripts).  
+I’m writing some useful PowerShell Scripts from time to time and I’m collecting them in my [repo](https://github.com/rstolpe/PowerShell-Scripts) and also posting them at my [blog](https://stolpe.io).
 ### Links
 - [Report bug, issue, improvement request or request new script](https://github.com/rstolpe/PowerShell-Scripts/issues/new/choose)
+- [YouTube Playlist for this repo](https://www.youtube.com/playlist?list=PLOdABThmxohswmbXjPadlpqdNiQxj9ZoP)
 - [Guide, activate WinRM with GPO](https://stolpe.io/enable-winrm-with-gpo/)
 - [Blog](https://stolpe.io)
+- [YouTube Channel](https://www.youtube.com/channel/UClrIQN9SysVTEMPmxxn-p1w)
 ## Scripts
 ### [Windows](https://github.com/rstolpe/PowerShell-Scripts/tree/main/Windows)
 All of the Windows scripts are stored in the [Windows folder](https://github.com/rstolpe/PowerShell-Scripts/tree/main/Windows) in this [repo](https://github.com/rstolpe/PowerShell-Scripts)
@@ -20,5 +20,5 @@ All of the Windows scripts are stored in the [Windows folder](https://github.com
     This function are making sure that the needed modules are installed, up to date and imported.
 - [Show-MonitorInformation](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Show-MonitorInformation.md)  
     Returns information about all the monitors that has been connected to the local or remote computer
-- [Remove-BrowserSettings](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Remove-BrowserSettings.md)
+- [Remove-BrowserSettings](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Remove-BrowserSettings.md)  
     This function let you delete Edge or Chrome settings for a specific user from both local and remote computer. 
