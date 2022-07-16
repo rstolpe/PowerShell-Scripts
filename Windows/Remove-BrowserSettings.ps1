@@ -107,8 +107,7 @@ function Remove-BrowserSettings {
                 Write-Host "All $($BrowserProcess) are now stopped" -ForegroundColor Green
             }
             catch {
-                Write-Host "Something went wrong when trying to stopp $($BrowserProcess)" -ForegroundColor Red
-                Write-Host "$($PSItem.Exception.Message)" -ForegroundColor Red
+                Write-Host "$($PSItem.Exception)" -ForegroundColor Red
                 Break
             }
             try {
@@ -145,8 +144,7 @@ function Remove-BrowserSettings {
                 } -ArgumentList $UserName, $Browser
             }
             catch {
-                Write-Host "Something went wrong when trying to delete the browser settings" -ForegroundColor Red
-                Write-Host "$($PSItem.Exception.Message)" -ForegroundColor Red
+                Write-Host "$($PSItem.Exception)" -ForegroundColor Red
                 Break
             }
         }

@@ -42,7 +42,7 @@ Function Get-UserProfiles {
         [string]$ComputerName,
         [array]$ExcludedProfiles
     )
-    if ([string]::IsNullOrEmpty($ComputerName)) {
+    if ([string]::IsNullOrWhiteSpace($ComputerName)) {
         [string]$ComputerName = "localhost"
     }
 
@@ -59,8 +59,7 @@ Function Get-UserProfiles {
         }
     }
     catch {
-        Write-Host "Something went wrong when collecting the user profiles!" -ForegroundColor Red
-        Write-Host "$($PSItem.Exception.Message)" -ForegroundColor Red
+        Write-Host "$($PSItem.Exception)"
         break
     }
 }
@@ -128,8 +127,7 @@ Function Remove-UserProfile {
                         Write-Host "The user profile $($Profile.LocalPath.split('\')[-1]) are now deleted!" -ForegroundColor Green
                     }
                     catch {
-                        Write-Host "Something went wrong when trying to delete the user profile $($Profile.LocalPath.split('\')[-1])" -ForegroundColor Red
-                        Write-Host "$($PSItem.Exception.Message)" -ForegroundColor Red
+                        Write-Host "$($PSItem.Exception)" -ForegroundColor Red
                         continue
                     }
                 }
@@ -146,8 +144,7 @@ Function Remove-UserProfile {
                     Write-Host "The user profile $($user) are now deleted!" -ForegroundColor Green
                 }
                 catch {
-                    Write-Host "Something went wrong when trying to delete the user profile $($user)" -ForegroundColor Red
-                    Write-Host "$($PSItem.Exception.Message)" -ForegroundColor Red
+                    Write-Host "$($PSItem.Exception)" -ForegroundColor Red
                     continue
                 }
             }
