@@ -39,15 +39,14 @@ Function Get-UserProfiles {
 
     [CmdletBinding()]
     Param(
-        [string]$ComputerName,
+        [string]$ComputerName = "localhost",
         [array]$ExcludedProfiles
     )
-    if ([string]::IsNullOrWhiteSpace($ComputerName)) {
-        [string]$ComputerName = "localhost"
-    }
 
+    Write-Host "`n== All profiles on $($ComputerName) ==`n"
     try {
-        Get-CimInstance -ComputerName $ComputerName -className Win32_UserProfile | Where-Object { (-Not ($_.Special)) } | Foreach-Object {
+        $CIMSession = New-CimSession -ComputerName $ComputerName
+        Get-CimInstance Get-CimInstance -ComputerName $ComputerName -className Win32_UserProfile | Where-Object { (-Not ($_.Special)) } | Foreach-Object {
             if (-Not ($_.LocalPath.split('\')[-1] -in $ExcludedProfiles)) {
                 [PSCustomObject]@{
                     'UserName'               = $_.LocalPath.split('\')[-1]
@@ -57,6 +56,7 @@ Function Get-UserProfiles {
                 }
             }
         }
+        Remove-CimSession -CimSession $CIMSession
     }
     catch {
         Write-Host "$($PSItem.Exception)"
@@ -100,14 +100,11 @@ Function Remove-UserProfile {
 
     [CmdletBinding()]
     Param(
-        [string]$ComputerName,
+        [string]$ComputerName = "localhost",
         [array]$ProfileToDelete,
         [switch]$DeleteAll,
         [array]$ExcludedProfiles
     )
-    if ([string]::IsNullOrEmpty($ComputerName)) {
-        [string]$ComputerName = "localhost"
-    }
 
     $AllUserProfiles = Get-CimInstance -ComputerName $ComputerName -className Win32_UserProfile | Where-Object { (-Not ($_.Special)) } | Select-Object LocalPath, Loaded
 

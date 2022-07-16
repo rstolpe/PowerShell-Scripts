@@ -52,8 +52,7 @@ Function Show-MonitorInformation {
         }
     }
     catch {
-        Write-Error "Something went wrong when collecting monitor information"
-        Write-Error "$($PSItem.Exception.Message)"
-        continue
+        Write-Error "$($PSItem.Exception)"
+        Break
     }
 }
