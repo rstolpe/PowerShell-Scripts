@@ -7,6 +7,7 @@ This function will return information about the monitor from either local or rem
 - Serial Number
 - Year Of Manufacture
 - Week Of Manufacture
+- You run this on multiple computers at the same time to display the information.
 
 ### Links
 - [Readme](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Get-MonitorInformation.md)  
