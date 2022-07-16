@@ -45,7 +45,6 @@ Function Get-UserProfiles {
 
     Write-Host "`n== All profiles on $($ComputerName) ==`n"
     try {
-        $CIMSession = New-CimSession -ComputerName $ComputerName
         Get-CimInstance Get-CimInstance -ComputerName $ComputerName -className Win32_UserProfile | Where-Object { (-Not ($_.Special)) } | Foreach-Object {
             if (-Not ($_.LocalPath.split('\')[-1] -in $ExcludedProfiles)) {
                 [PSCustomObject]@{
@@ -56,7 +55,6 @@ Function Get-UserProfiles {
                 }
             }
         }
-        Remove-CimSession -CimSession $CIMSession
     }
     catch {
         Write-Host "$($PSItem.Exception)"
