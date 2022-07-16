@@ -42,10 +42,10 @@ Function Get-UserProfiles {
         [string]$ComputerName = "localhost",
         [array]$ExcludedProfiles
     )
-
-    Write-Host "`n== All profiles on $($ComputerName) ==`n"
+    #foreach ($Computer in $ComputerName.Split(",").Trim()) {
+    Write-Host "`n== All profiles on $($Computer) ==`n"
     try {
-        Get-CimInstance Get-CimInstance -ComputerName $ComputerName -className Win32_UserProfile | Where-Object { (-Not ($_.Special)) } | Foreach-Object {
+        Get-CimInstance -ComputerName $Computer -className Win32_UserProfile | Where-Object { (-Not ($_.Special)) } | Foreach-Object {
             if (-Not ($_.LocalPath.split('\')[-1] -in $ExcludedProfiles)) {
                 [PSCustomObject]@{
                     'UserName'               = $_.LocalPath.split('\')[-1]
@@ -60,6 +60,7 @@ Function Get-UserProfiles {
         Write-Host "$($PSItem.Exception)"
         break
     }
+    #}
 }
 
 Function Remove-UserProfile {
