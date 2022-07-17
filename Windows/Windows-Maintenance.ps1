@@ -37,7 +37,7 @@ Function Confirm-NeededModules {
         When this is used the script will not install any modules it will upgrade all of the already installed modules on the computer to the latest version.
 
         .EXAMPLE
-        Confirm-NeededModules -NeededModules @("PowerCLI", "ImportExcel") -ImportModules -DeleteOldVersion
+        Confirm-NeededModules -NeededModules "PowerCLI, ImportExcel" -ImportModules -DeleteOldVersion
         This will check so PowerCLI and ImportExcel is installd and up to date, it not it will install them or upgrade them to the latest version and then delete
         all of the old versions and import the modules.
 
@@ -118,7 +118,7 @@ Function Confirm-NeededModules {
     }
 
     # Checks if all modules in $NeededModules are installed and up to date.
-    foreach ($m in $NeededModules) {
+    foreach ($m in $NeededModules.Split(",").Trim()) {
         if ($m -in $CurrentModules.Name) {
             # Collects the latest version of module
             $NewestVersion = Find-Module -Name $m | Sort-Object Version -Descending | Select-Object Version -First 1
@@ -179,7 +179,7 @@ Function Confirm-NeededModules {
         $ImportedModules = get-module | Select-Object Name, Version
     
         # Import module if it's not imported
-        foreach ($module in $NeededModules) {
+        foreach ($module in $NeededModules.Split(",").Trim()) {
             if ($module -in $ImportedModules.Name) {
                 Write-Output "$($Module) are already imported!" -ForegroundColor Green
             }
@@ -460,7 +460,7 @@ Function Start-CleanDisk {
 }
 
 
-Confirm-NeededModules -NeededModules @("PowerShellGet", "MSIPatches", "PSWindowsUpdate", "NuGet") -ImportModules -DeleteOldVersion
+Confirm-NeededModules -NeededModules "PowerShellGet,MSIPatches,PSWindowsUpdate,NuGet" -ImportModules -DeleteOldVersion
 Remove-MSPatches
 Remove-TempFolderFiles
 Start-CleanDisk
