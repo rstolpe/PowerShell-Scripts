@@ -121,7 +121,7 @@ Function Confirm-NeededModules {
     }
 
     # Checks if all modules in $NeededModules are installed and up to date.
-    foreach ($m in $NeededModules.Name) {
+    foreach ($m in $NeededModules.Split(",").Trim()) {
         if ($m -in $CurrentModules.Name) {
             # Collects the latest version of module
             $NewestVersion = Find-Module -Name $m | Sort-Object Version -Descending | Select-Object Version -First 1
@@ -131,7 +131,7 @@ Function Confirm-NeededModules {
 
             Write-Host "Checking if $($m) needs to be updated..."
             # Check if the module are up to date
-            if ($NewestVersion.Version -gt $AllVersions.Version) {
+            if ($AllVersions.Version -lt $MostRecentVersion) {
                 try {
                     Write-Host "Updating $($m) to version $($NewestVersion.Version)..."
                     Update-Module -Name $($m) -Force
@@ -182,7 +182,7 @@ Function Confirm-NeededModules {
         $ImportedModules = get-module | Select-Object Name, Version
     
         # Import module if it's not imported
-        foreach ($module in $NeededModules.Name) {
+        foreach ($module in $NeededModules.Split(",").Trim()) {
             if ($module -in $ImportedModules.Name) {
                 Write-Host "$($Module) are already imported!" -ForegroundColor Green
             }
