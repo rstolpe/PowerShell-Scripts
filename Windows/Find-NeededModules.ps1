@@ -73,49 +73,47 @@ Function Find-NeededModules {
         $CurrentInstalledPackageProviders = Get-PackageProvider -ListAvailable | Select-Object Name -ExpandProperty Name
     }
 
-    Write-Host $HeadLine
-    Write-Host "Please wait, this can take time..."
+    Write-Output $HeadLine
+    Write-Output "Please wait, this can take time..."
     # This packages are needed for this script to work, you can add more if you want. Don't confuse this with modules
     if ($OnlyUpgrade -eq $false) {
         # Making sure that TLS 1.2 is used.
-        Write-Host "Making sure that TLS 1.2 is used"
+        Write-Output "Making sure that TLS 1.2 is used..."
         [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 
         # Installing needed packages if it's missing.
-        Write-Host "Making sure that all of the PackageProviders that are needed are installed..."
+        Write-Output "Making sure that all of the PackageProviders that are needed are installed..."
         foreach ($Provider in $NeededPackages) {
             if ($Provider -NotIn $CurrentInstalledPackageProviders) {
                 Try {
-                    Write-Host "Installing $($Provider) as it's missing..."
+                    Write-Output "Installing $($Provider) as it's missing..."
                     Install-PackageProvider -Name $provider -Force -Scope AllUsers
-                    Write-Host "$($Provider) is now installed" -ForegroundColor Green
+                    Write-Output "$($Provider) is now installed" -ForegroundColor Green
                 }
                 catch {
-                    Write-Error "Error installing $($Provider)"
-                    Write-Error "$($PSItem.Exception.Message)"
+                    Write-Error "$($PSItem.Exception)"
                     continue
                 }
             }
             else {
-                Write-Host "$($provider) is already installed." -ForegroundColor Green
+                Write-Output "$($provider) is already installed." -ForegroundColor Green
             }
         }
 
         # Setting PSGallery as trusted if it's not trusted
-        Write-Host "Making sure that PSGallery is set to Trusted..."
+        Write-Output "Making sure that PSGallery is set to Trusted..."
         if ((Get-PSRepository -name PSGallery | Select-Object InstallationPolicy -ExpandProperty InstallationPolicy) -eq "Untrusted") {
             try {
                 Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-                Write-Host "PSGallery is now set to trusted" -ForegroundColor Green
+                Write-Output "PSGallery is now set to trusted" -ForegroundColor Green
             }
             catch {
-                Write-Error "Error could not set PSGallery to trusted"
-                Write-Error "$($PSItem.Exception.Message)"
+                Write-Error "$($PSItem.Exception)"
                 continue
             }
         }
         else {
-            Write-Host "PSGallery is already trusted" -ForegroundColor Green
+            Write-Output "PSGallery is already trusted" -ForegroundColor Green
         }
     }
 
@@ -128,17 +126,16 @@ Function Find-NeededModules {
             $AllVersions = Get-InstalledModule -Name $m -AllVersions | Sort-Object PublishedDate -Descending
             $MostRecentVersion = $AllVersions[0].Version
 
-            Write-Host "Checking if $($m) needs to be updated..."
+            Write-Output "Checking if $($m) needs to be updated..."
             # Check if the module are up to date
             if ($NewestVersion.Version -gt $AllVersions.Version) {
                 try {
-                    Write-Host "Updating $($m) to version $($NewestVersion.Version)..."
+                    Write-Output "Updating $($m) to version $($NewestVersion.Version)..."
                     Update-Module -Name $($m) -Force
-                    Write-Host "$($m) has been updated!" -ForegroundColor Green
+                    Write-Output "$($m) has been updated!" -ForegroundColor Green
                 }
                 catch {
-                    Write-Error "Error updating module $($m)"
-                    Write-Error "$($PSItem.Exception.Message)"
+                    Write-Error "$($PSItem.Exception)"
                     continue
                 }
                 if ($DeleteOldVersion -eq $true) {
@@ -147,13 +144,12 @@ Function Find-NeededModules {
                         Foreach ($Version in $AllVersions) {
                             if ($Version.Version -ne $MostRecentVersion) {
                                 try {
-                                    Write-Host "Uninstalling previous version $($Version.Version) of module $($m)..."
+                                    Write-Output "Uninstalling previous version $($Version.Version) of module $($m)..."
                                     Uninstall-Module -Name $m -RequiredVersion $Version.Version -Force -ErrorAction SilentlyContinue
-                                    Write-Host "$($m) are not uninstalled!" -ForegroundColor Green
+                                    Write-Output "$($m) are not uninstalled!" -ForegroundColor Green
                                 }
                                 catch {
-                                    Write-Error "Error uninstalling previous version $($Version.Version) of module $($m)"
-                                    Write-Error "$($PSItem.Exception.Message)"
+                                    Write-Error "$($PSItem.Exception)"
                                     continue
                                 }
                             }
@@ -162,18 +158,17 @@ Function Find-NeededModules {
                 }
             }
             else {
-                Write-Host "$($m) don't need to be updated as it's on the latest version" -ForegroundColor Green
+                Write-Output "$($m) don't need to be updated as it's on the latest version" -ForegroundColor Green
             }
         }
         else {
             # Installing missing module
-            Write-Host "Installing module $($m) as it's missing..."
+            Write-Output "Installing module $($m) as it's missing..."
             try {
                 Install-Module -Name $m -Scope AllUsers -Force
-                Write-Host "$($m) are now installed!" -ForegroundColor Green
+                Write-Output "$($m) are now installed!" -ForegroundColor Green
             }
             catch {
-                Write-Error "Could not install $($m)"
                 Write-Error "$($PSItem.Exception)"
                 continue
             }
@@ -186,21 +181,20 @@ Function Find-NeededModules {
         # Import module if it's not imported
         foreach ($module in $NeededModules) {
             if ($module -in $ImportedModules.Name) {
-                Write-Host "$($Module) are already imported!" -ForegroundColor Green
+                Write-Output "$($Module) are already imported!" -ForegroundColor Green
             }
             else {
                 try {
-                    Write-Host "Importing $($module) module..."
+                    Write-Output "Importing $($module) module..."
                     Import-Module -Name $module -Force
-                    Write-Host "$($module) are now imported!" -ForegroundColor Green
+                    Write-Output "$($module) are now imported!" -ForegroundColor Green
                 }
                 catch {
-                    Write-Error "Could not import module $($module)"
-                    Write-Error "$($PSItem.Exception.Message)"
+                    Write-Error "$($PSItem.Exception)"
                     continue
                 }
             }
         }
     }
-    Write-Host "Finished!" -ForegroundColor Green
+    Write-Output "Finished!" -ForegroundColor Green
 }
