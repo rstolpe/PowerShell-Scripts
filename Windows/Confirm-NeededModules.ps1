@@ -122,7 +122,7 @@ Function Confirm-NeededModules {
 
     # Checks if all modules in $NeededModules are installed and up to date.
     foreach ($m in $NeededModules.Split(",").Trim()) {
-        if ($m -in $CurrentModules.Name) {
+        if ($m -in $CurrentModules.Name -or $OnlyUpgrade -eq $true) {
             # Collects the latest version of module
             $NewestVersion = Find-Module -Name $m | Sort-Object Version -Descending | Select-Object Version -First 1
             # Get all the installed modules and versions
