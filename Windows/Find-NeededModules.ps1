@@ -70,7 +70,7 @@ Function Find-NeededModules {
     $AllPackageProviders = Get-PackageProvider -ListAvailable | Select-Object Name -ExpandProperty Name
 
     if ($OnlyUpgrade -eq $True) {
-        $NeededModules = $CurrentModules.Name
+        $NeededModules = $CurrentModules
     }
 
     # Making sure that TLS 1.2 is used.
