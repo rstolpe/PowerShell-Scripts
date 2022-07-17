@@ -142,14 +142,16 @@ Function Confirm-NeededModules {
                         continue
                     }
                     if ($DeleteOldVersion -eq $true) {
+                        $AllCurrentVersion = Get-InstalledModule -Name $m -AllVersions | Sort-Object PublishedDate -Descending
                         # Remove old versions of the modules
                         if ($AllCurrentVersion.Count -gt 1) {
+                            $MostRecentVersion = $AllCurrentVersion[0].Version
                             Foreach ($Version in $AllCurrentVersion.Version) {
-                                if ($Version.Version -ne $NewestVersion.Version) {
+                                if ($Version -ne $MostRecentVersion) {
                                     try {
-                                        Write-Host "Uninstalling previous version $($Version.Version) of module $($m)..."
-                                        Uninstall-Module -Name $m -RequiredVersion $Version.Version -Force -ErrorAction SilentlyContinue
-                                        Write-Host "$($m) are not uninstalled!" -ForegroundColor Green
+                                        Write-Host "Uninstalling previous version $($Version) of module $($m)..."
+                                        Uninstall-Module -Name $m -RequiredVersion $Version -Force -ErrorAction SilentlyContinue
+                                        Write-Host "Version $($Version) of $($m) are now uninstalled!" -ForegroundColor Green
                                     }
                                     catch {
                                         Write-Error "$($PSItem.Exception)"
