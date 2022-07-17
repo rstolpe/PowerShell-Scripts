@@ -123,45 +123,50 @@ Function Confirm-NeededModules {
     # Checks if all modules in $NeededModules are installed and up to date.
     foreach ($m in $NeededModules.Split(",").Trim()) {
         if ($m -in $CurrentModules.Name -or $OnlyUpgrade -eq $true) {
-            # Collects the latest version of module
-            $NewestVersion = Find-Module -Name $m | Sort-Object Version -Descending | Select-Object Version -First 1
-            # Get all the installed modules and versions
-            $CurrentVersion = Get-InstalledModule -Name $m -AllVersions | Sort-Object PublishedDate -Descending
-            $MostRecentVersion = $CurrentVersion[0].Version
+            if ($m -in $CurrentModules.Name) {
+                # Collects the latest version of module
+                $NewestVersion = Find-Module -Name $m | Sort-Object Version -Descending | Select-Object Version -First 1
+                # Get all the installed modules and versions
+                $CurrentVersion = Get-InstalledModule -Name $m -AllVersions | Sort-Object PublishedDate -Descending
+                $MostRecentVersion = $CurrentVersion[0].Version
 
-            Write-Host "Checking if $($m) needs to be updated..."
-            # Check if the module are up to date
-            if ($CurrentVersion.Version -lt $MostRecentVersion) {
-                try {
-                    Write-Host "Updating $($m) to version $($NewestVersion.Version)..."
-                    Update-Module -Name $($m) -Force
-                    Write-Host "$($m) has been updated!" -ForegroundColor Green
-                }
-                catch {
-                    Write-Error "$($PSItem.Exception)"
-                    continue
-                }
-                if ($DeleteOldVersion -eq $true) {
-                    # Remove old versions of the modules
-                    if ($CurrentVersion.Count -gt 1 ) {
-                        Foreach ($Version in $CurrentVersion) {
-                            if ($Version.Version -ne $MostRecentVersion) {
-                                try {
-                                    Write-Host "Uninstalling previous version $($Version.Version) of module $($m)..."
-                                    Uninstall-Module -Name $m -RequiredVersion $Version.Version -Force -ErrorAction SilentlyContinue
-                                    Write-Host "$($m) are not uninstalled!" -ForegroundColor Green
-                                }
-                                catch {
-                                    Write-Error "$($PSItem.Exception)"
-                                    continue
+                Write-Host "Checking if $($m) needs to be updated..."
+                # Check if the module are up to date
+                if ($CurrentVersion.Version -lt $MostRecentVersion) {
+                    try {
+                        Write-Host "Updating $($m) to version $($NewestVersion.Version)..."
+                        Update-Module -Name $($m) -Force
+                        Write-Host "$($m) has been updated!" -ForegroundColor Green
+                    }
+                    catch {
+                        Write-Error "$($PSItem.Exception)"
+                        continue
+                    }
+                    if ($DeleteOldVersion -eq $true) {
+                        # Remove old versions of the modules
+                        if ($CurrentVersion.Count -gt 1 ) {
+                            Foreach ($Version in $CurrentVersion) {
+                                if ($Version.Version -ne $MostRecentVersion) {
+                                    try {
+                                        Write-Host "Uninstalling previous version $($Version.Version) of module $($m)..."
+                                        Uninstall-Module -Name $m -RequiredVersion $Version.Version -Force -ErrorAction SilentlyContinue
+                                        Write-Host "$($m) are not uninstalled!" -ForegroundColor Green
+                                    }
+                                    catch {
+                                        Write-Error "$($PSItem.Exception)"
+                                        continue
+                                    }
                                 }
                             }
                         }
                     }
                 }
+                else {
+                    Write-Host "$($m) don't need to be updated as it's on the latest version" -ForegroundColor Green
+                }
             }
             else {
-                Write-Host "$($m) don't need to be updated as it's on the latest version" -ForegroundColor Green
+                Write-Warning "Can't check if $($m) needs to be updated as $($m) are not installed!"
             }
         }
         else {
