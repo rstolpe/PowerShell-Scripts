@@ -61,44 +61,46 @@ Function Find-NeededModules {
     )
     # Collects all of the installed modules on the system
     $CurrentModules = Get-InstalledModule | Select-Object Name, Version | Sort-Object Name
-    $HeadLine = "`n=== Making sure that all modules are installad and up to date ===`n"
 
     if ($OnlyUpgrade -eq $True) {
         $NeededModules = $CurrentModules
         $HeadLine = "`n=== Making sure that all modules up to date ===`n"
     }
+    else {
+        $HeadLine = "`n=== Making sure that all modules are installad and up to date ===`n"
+        $NeededPackages = @("NuGet", "PowerShellGet")
+        # Collects all of the installed packages
+        $CurrentInstalledPackageProviders = Get-PackageProvider -ListAvailable | Select-Object Name -ExpandProperty Name
+    }
 
     Write-Host $HeadLine
     Write-Host "Please wait, this can take time..."
     # This packages are needed for this script to work, you can add more if you want. Don't confuse this with modules
-    $NeededPackages = @("NuGet", "PowerShellGet")
-    # Collects all of the installed packages
-    $AllPackageProviders = Get-PackageProvider -ListAvailable | Select-Object Name -ExpandProperty Name
-
-    # Making sure that TLS 1.2 is used.
-    [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
-
-    # Installing needed packages if it's missing.
-    Write-Host "Making sure that all of the PackageProviders that are needed are installed..."
-    foreach ($Provider in $NeededPackages) {
-        if ($Provider -NotIn $AllPackageProviders) {
-            Try {
-                Write-Host "Installing $($Provider) as it's missing..."
-                Install-PackageProvider -Name $provider -Force -Scope AllUsers
-                Write-Host "$($Provider) is now installed" -ForegroundColor Green
-            }
-            catch {
-                Write-Error "Error installing $($Provider)"
-                Write-Error "$($PSItem.Exception.Message)"
-                continue
-            }
-        }
-        else {
-            Write-Host "$($provider) is already installed." -ForegroundColor Green
-        }
-    }
-
     if ($OnlyUpgrade -eq $false) {
+        # Making sure that TLS 1.2 is used.
+        Write-Host "Making sure that TLS 1.2 is used"
+        [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
+
+        # Installing needed packages if it's missing.
+        Write-Host "Making sure that all of the PackageProviders that are needed are installed..."
+        foreach ($Provider in $NeededPackages) {
+            if ($Provider -NotIn $CurrentInstalledPackageProviders) {
+                Try {
+                    Write-Host "Installing $($Provider) as it's missing..."
+                    Install-PackageProvider -Name $provider -Force -Scope AllUsers
+                    Write-Host "$($Provider) is now installed" -ForegroundColor Green
+                }
+                catch {
+                    Write-Error "Error installing $($Provider)"
+                    Write-Error "$($PSItem.Exception.Message)"
+                    continue
+                }
+            }
+            else {
+                Write-Host "$($provider) is already installed." -ForegroundColor Green
+            }
+        }
+
         # Setting PSGallery as trusted if it's not trusted
         Write-Host "Making sure that PSGallery is set to Trusted..."
         if ((Get-PSRepository -name PSGallery | Select-Object InstallationPolicy -ExpandProperty InstallationPolicy) -eq "Untrusted") {
