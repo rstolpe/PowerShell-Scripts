@@ -129,15 +129,14 @@ Function Confirm-NeededModules {
                 # Collects the latest version of module
                 $NewestVersion = Find-Module -Name $m | Sort-Object Version -Descending | Select-Object Version -First 1
                 # Get all the installed modules and versions
-                $CurrentVersion = Get-InstalledModule -Name $m -AllVersions | Sort-Object PublishedDate -Descending
-                $MostRecentVersion = $CurrentVersion[0].Version
+                $AllCurrentVersion = Get-InstalledModule -Name $m -AllVersions | Sort-Object PublishedDate -Descending
 
                 Write-Host "Checking if $($m) needs to be updated..."
                 # Check if the module are up to date
-                if ($CurrentVersion.Version -lt $MostRecentVersion) {
+                if ($AllCurrentVersion.Version -lt $NewestVersion.Version) {
                     try {
                         Write-Host "Updating $($m) to version $($NewestVersion.Version)..."
-                        Update-Module -Name $($m) -Force
+                        Update-Module -Name $($m) -Scope AllUsers -Force
                         Write-Host "$($m) has been updated!" -ForegroundColor Green
                     }
                     catch {
@@ -145,14 +144,16 @@ Function Confirm-NeededModules {
                         continue
                     }
                     if ($DeleteOldVersion -eq $true) {
+                        $AllCurrentVersion = Get-InstalledModule -Name $m -AllVersions | Sort-Object PublishedDate -Descending
                         # Remove old versions of the modules
-                        if ($CurrentVersion.Count -gt 1 ) {
-                            Foreach ($Version in $CurrentVersion) {
-                                if ($Version.Version -ne $MostRecentVersion) {
+                        if ($AllCurrentVersion.Count -gt 1) {
+                            $MostRecentVersion = $AllCurrentVersion[0].Version
+                            Foreach ($Version in $AllCurrentVersion.Version) {
+                                if ($Version -ne $MostRecentVersion) {
                                     try {
-                                        Write-Host "Uninstalling previous version $($Version.Version) of module $($m)..."
-                                        Uninstall-Module -Name $m -RequiredVersion $Version.Version -Force -ErrorAction SilentlyContinue
-                                        Write-Host "$($m) are not uninstalled!" -ForegroundColor Green
+                                        Write-Host "Uninstalling previous version $($Version) of module $($m)..."
+                                        Uninstall-Module -Name $m -RequiredVersion $Version -Force -ErrorAction SilentlyContinue
+                                        Write-Host "Version $($Version) of $($m) are now uninstalled!" -ForegroundColor Green
                                     }
                                     catch {
                                         Write-Error "$($PSItem.Exception)"
