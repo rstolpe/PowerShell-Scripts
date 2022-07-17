@@ -15,6 +15,6 @@ I have made it dynamic so you can use switches to activate some of the features,
 - [Readme](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Confirm-NeededModules.md)  
 - [Script file](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Confirm-NeededModules.ps1)
 - [Blog post](https://stolpe.io/function-to-check-if-needed-modules-are-installed/)
-- [YouTube video of the script]()
+- [YouTube video of the script](https://youtu.be/__xMLPhmm4Y)
 - [Report bug, issue, improvement request or request new script](https://github.com/rstolpe/PowerShell-Scripts/issues/new/choose)
 - [Main repo](https://github.com/rstolpe/PowerShell-Scripts)
