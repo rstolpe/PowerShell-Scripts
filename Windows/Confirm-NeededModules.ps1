@@ -160,9 +160,6 @@ Function Confirm-NeededModules {
                                 }
                             }
                         }
-                        else {
-                            Write-Host "$($m) don't have any earlier version then $($AllCurrentVersion.version) installed, nothing to delete!" -ForegroundColor Green
-                        }
                     }
                 }
                 else {
