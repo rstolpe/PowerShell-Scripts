@@ -87,8 +87,8 @@ Function Confirm-NeededModules {
         [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 
         # Installing needed packages if it's missing.
-        Write-Host "Making sure that all of the PackageProviders that are needed are installed..."
-        foreach ($Provider in $NeededPackages.Name) {
+        Write-Host "Making sure that all of the Package providers that are needed are installed..."
+        foreach ($Provider in $NeededPackages) {
             if ($Provider -NotIn $CurrentInstalledPackageProviders) {
                 Try {
                     Write-Host "Installing $($Provider) as it's missing..."
