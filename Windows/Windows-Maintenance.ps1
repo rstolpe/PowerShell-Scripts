@@ -37,12 +37,15 @@ Function Confirm-NeededModules {
         When this is used the script will not install any modules it will upgrade all of the already installed modules on the computer to the latest version.
 
         .EXAMPLE
-        Confirm-NeededModules -NeededModules "PowerCLI, ImportExcel" -ImportModules -DeleteOldVersion
+        Confirm-NeededModules -NeededModules "PowerCLI,ImportExcel" -ImportModules -DeleteOldVersion
         This will check so PowerCLI and ImportExcel is installd and up to date, it not it will install them or upgrade them to the latest version and then delete
         all of the old versions and import the modules.
 
-        Confirm-NeededModules -NeededModules @("PowerCLI")
+        Confirm-NeededModules -NeededModules "PowerCLI"
         This will only install PowerCli if it's not installed and upgrade it if needed. This example will not delete the old versions of PowerCli or import the module at the end.
+
+        Confirm-NeededModules -NeededModules "PowerCLI" -OnlyUpgrade
+        This will only upgrade PowerCLI module
 
         Confirm-NeededModules -OnlyUpgrade
         This will upgrade all of the already installed modules on the computer to the latest version
@@ -121,46 +124,51 @@ Function Confirm-NeededModules {
 
     # Checks if all modules in $NeededModules are installed and up to date.
     foreach ($m in $NeededModules.Split(",").Trim()) {
-        if ($m -in $CurrentModules.Name) {
-            # Collects the latest version of module
-            $NewestVersion = Find-Module -Name $m | Sort-Object Version -Descending | Select-Object Version -First 1
-            # Get all the installed modules and versions
-            $AllVersions = Get-InstalledModule -Name $m -AllVersions | Sort-Object PublishedDate -Descending
-            $MostRecentVersion = $AllVersions[0].Version
+        if ($m -in $CurrentModules.Name -or $OnlyUpgrade -eq $true) {
+            if ($m -in $CurrentModules.Name) {
+                # Collects the latest version of module
+                $NewestVersion = Find-Module -Name $m | Sort-Object Version -Descending | Select-Object Version -First 1
+                # Get all the installed modules and versions
+                $CurrentVersion = Get-InstalledModule -Name $m -AllVersions | Sort-Object PublishedDate -Descending
+                $MostRecentVersion = $CurrentVersion[0].Version
 
-            Write-Host "Checking if $($m) needs to be updated..."
-            # Check if the module are up to date
-            if ($NewestVersion.Version -gt $AllVersions.Version) {
-                try {
-                    Write-Host "Updating $($m) to version $($NewestVersion.Version)..."
-                    Update-Module -Name $($m) -Force
-                    Write-Host "$($m) has been updated!" -ForegroundColor Green
-                }
-                catch {
-                    Write-Error "$($PSItem.Exception)"
-                    continue
-                }
-                if ($DeleteOldVersion -eq $true) {
-                    # Remove old versions of the modules
-                    if ($AllVersions.Count -gt 1 ) {
-                        Foreach ($Version in $AllVersions) {
-                            if ($Version.Version -ne $MostRecentVersion) {
-                                try {
-                                    Write-Host "Uninstalling previous version $($Version.Version) of module $($m)..."
-                                    Uninstall-Module -Name $m -RequiredVersion $Version.Version -Force -ErrorAction SilentlyContinue
-                                    Write-Host "$($m) are not uninstalled!" -ForegroundColor Green
-                                }
-                                catch {
-                                    Write-Error "$($PSItem.Exception)"
-                                    continue
+                Write-Host "Checking if $($m) needs to be updated..."
+                # Check if the module are up to date
+                if ($CurrentVersion.Version -lt $MostRecentVersion) {
+                    try {
+                        Write-Host "Updating $($m) to version $($NewestVersion.Version)..."
+                        Update-Module -Name $($m) -Force
+                        Write-Host "$($m) has been updated!" -ForegroundColor Green
+                    }
+                    catch {
+                        Write-Error "$($PSItem.Exception)"
+                        continue
+                    }
+                    if ($DeleteOldVersion -eq $true) {
+                        # Remove old versions of the modules
+                        if ($CurrentVersion.Count -gt 1 ) {
+                            Foreach ($Version in $CurrentVersion) {
+                                if ($Version.Version -ne $MostRecentVersion) {
+                                    try {
+                                        Write-Host "Uninstalling previous version $($Version.Version) of module $($m)..."
+                                        Uninstall-Module -Name $m -RequiredVersion $Version.Version -Force -ErrorAction SilentlyContinue
+                                        Write-Host "$($m) are not uninstalled!" -ForegroundColor Green
+                                    }
+                                    catch {
+                                        Write-Error "$($PSItem.Exception)"
+                                        continue
+                                    }
                                 }
                             }
                         }
                     }
                 }
+                else {
+                    Write-Host "$($m) don't need to be updated as it's on the latest version" -ForegroundColor Green
+                }
             }
             else {
-                Write-Host "$($m) don't need to be updated as it's on the latest version" -ForegroundColor Green
+                Write-Warning "Can't check if $($m) needs to be updated as $($m) are not installed!"
             }
         }
         else {
@@ -198,7 +206,7 @@ Function Confirm-NeededModules {
             }
         }
     }
-    Write-Host "Finished!" -ForegroundColor Green
+    Write-Host "`n== Script Finished! ==" -ForegroundColor Green
 }
 
 Function Remove-MSPatches {
