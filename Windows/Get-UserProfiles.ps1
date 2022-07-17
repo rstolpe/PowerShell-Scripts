@@ -47,7 +47,7 @@ Function Get-UserProfiles {
         [array]$ExcludedProfiles
     )
     foreach ($Computer in $ComputerName.Split(",").Trim()) {
-        Write-Host "`n== All profiles on $($Computer ) ==`n"
+        Write-Output "`n== All profiles on $($Computer ) ==`n"
         try {
             Get-CimInstance -ComputerName $Computer -className Win32_UserProfile | Where-Object { (-Not ($_.Special)) } | Foreach-Object {
                 if (-Not ($_.LocalPath.split('\')[-1] -in $ExcludedProfiles)) {
@@ -61,7 +61,7 @@ Function Get-UserProfiles {
             } | Format-Table
         }
         catch {
-            Write-Host "$($PSItem.Exception)"
+            Write-Error "$($PSItem.Exception)"
             break
         }
     }
@@ -114,7 +114,7 @@ Function Remove-UserProfile {
     if ($DeleteAll -eq $True) {
         foreach ($Profile in $AllUserProfiles) {
             if ($Profile.LocalPath.split('\')[-1] -in $ExcludedProfiles) {
-                Write-Host "$($Profile.LocalPath.split('\')[-1]) are excluded so it wont be deleted, proceeding to next profile..."
+                Write-Output "$($Profile.LocalPath.split('\')[-1]) are excluded so it wont be deleted, proceeding to next profile..."
             }
             else {
                 if ($Profile.Loaded -eq $True) {
@@ -122,12 +122,12 @@ Function Remove-UserProfile {
                 }
                 else {
                     try {
-                        write-Host "Deleting user profile $($Profile.LocalPath.split('\')[-1])..."
+                        Write-Output "Deleting user profile $($Profile.LocalPath.split('\')[-1])..."
                         Get-CimInstance -ComputerName $ComputerName Win32_UserProfile | Where-Object { $_.LocalPath -eq $Profile.LocalPath } | Remove-CimInstance
-                        Write-Host "The user profile $($Profile.LocalPath.split('\')[-1]) are now deleted!" -ForegroundColor Green
+                        Write-Output "The user profile $($Profile.LocalPath.split('\')[-1]) are now deleted!" -ForegroundColor Green
                     }
                     catch {
-                        Write-Host "$($PSItem.Exception)" -ForegroundColor Red
+                        Write-Error "$($PSItem.Exception)"
                         continue
                     }
                 }
@@ -139,12 +139,12 @@ Function Remove-UserProfile {
             if ("$env:SystemDrive\Users\$($user)" -in $AllUserProfiles.LocalPath) {
                 # check if the userprofile are loaded and if it is show warning
                 try {
-                    write-Host "Deleting user profile $($user)..."
+                    Write-Output "Deleting user profile $($user)..."
                     Get-CimInstance -ComputerName $ComputerName Win32_UserProfile | Where-Object { $_.LocalPath -eq "$env:SystemDrive\Users\$($user)" } | Remove-CimInstance
-                    Write-Host "The user profile $($user) are now deleted!" -ForegroundColor Green
+                    Write-Output "The user profile $($user) are now deleted!" -ForegroundColor Green
                 }
                 catch {
-                    Write-Host "$($PSItem.Exception)" -ForegroundColor Red
+                    Write-Error "$($PSItem.Exception)"
                     continue
                 }
             }
