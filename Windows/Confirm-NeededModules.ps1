@@ -126,12 +126,12 @@ Function Confirm-NeededModules {
             # Collects the latest version of module
             $NewestVersion = Find-Module -Name $m | Sort-Object Version -Descending | Select-Object Version -First 1
             # Get all the installed modules and versions
-            $AllVersions = Get-InstalledModule -Name $m -AllVersions | Sort-Object PublishedDate -Descending
-            $MostRecentVersion = $AllVersions[0].Version
+            $CurrentVersion = Get-InstalledModule -Name $m -AllVersions | Sort-Object PublishedDate -Descending
+            $MostRecentVersion = $CurrentVersion[0].Version
 
             Write-Host "Checking if $($m) needs to be updated..."
             # Check if the module are up to date
-            if ($AllVersions.Version -lt $MostRecentVersion) {
+            if ($CurrentVersion.Version -lt $MostRecentVersion) {
                 try {
                     Write-Host "Updating $($m) to version $($NewestVersion.Version)..."
                     Update-Module -Name $($m) -Force
@@ -143,8 +143,8 @@ Function Confirm-NeededModules {
                 }
                 if ($DeleteOldVersion -eq $true) {
                     # Remove old versions of the modules
-                    if ($AllVersions.Count -gt 1 ) {
-                        Foreach ($Version in $AllVersions) {
+                    if ($CurrentVersion.Count -gt 1 ) {
+                        Foreach ($Version in $CurrentVersion) {
                             if ($Version.Version -ne $MostRecentVersion) {
                                 try {
                                     Write-Host "Uninstalling previous version $($Version.Version) of module $($m)..."
