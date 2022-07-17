@@ -22,3 +22,6 @@ All of the Windows scripts are stored in the [Windows folder](https://github.com
     Returns information about all the monitors that has been connected to the local or remote computer
 - [Remove-BrowserSettings](https://github.com/rstolpe/PowerShell-Scripts/blob/main/Windows/Remove-BrowserSettings.md)  
     This function let you delete Edge or Chrome settings for a specific user or users from either local or remote computer. 
+
+### [VMWare](https://github.com/rstolpe/PowerShell-Scripts/tree/main/VMWare)
+All of the VMWare scripts are stored in the [VMWare folder](https://github.com/rstolpe/PowerShell-Scripts/tree/main/VMWare) in this [repo](https://github.com/rstolpe/PowerShell-Scripts)
