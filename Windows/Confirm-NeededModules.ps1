@@ -132,7 +132,7 @@ Function Confirm-NeededModules {
 
                 Write-Host "Checking if $($m) needs to be updated..."
                 # Check if the module are up to date
-                if ($CurrentVersion.Version -lt $MostRecentVersion) {
+                if ($CurrentVersion.Version -lt $NewestVersion.Version) {
                     try {
                         Write-Host "Updating $($m) to version $($NewestVersion.Version)..."
                         Update-Module -Name $($m) -Force
@@ -146,7 +146,7 @@ Function Confirm-NeededModules {
                         # Remove old versions of the modules
                         if ($CurrentVersion.Count -gt 1 ) {
                             Foreach ($Version in $CurrentVersion) {
-                                if ($Version.Version -ne $MostRecentVersion) {
+                                if ($Version.Version -ne $MostRecentVersion.Version) {
                                     try {
                                         Write-Host "Uninstalling previous version $($Version.Version) of module $($m)..."
                                         Uninstall-Module -Name $m -RequiredVersion $Version.Version -Force -ErrorAction SilentlyContinue
