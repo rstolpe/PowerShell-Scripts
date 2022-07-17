@@ -127,7 +127,7 @@ Function Find-NeededModules {
             if ($NewestVersion.Version -gt $AllVersions.Version) {
                 try {
                     Write-Host "Updating $($m) to version $($NewestVersion.Version)..."
-                    Update-Module -Name $($m) -Scope AllUsers
+                    Update-Module -Name $($m) -Force
                     Write-Host "$($m) has been updated!" -ForegroundColor Green
                 }
                 catch {
