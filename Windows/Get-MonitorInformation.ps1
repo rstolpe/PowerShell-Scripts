@@ -41,7 +41,7 @@ Function Get-MonitorInformation {
 
     foreach ($Computer in $ComputerName.Split(",").Trim()) {
         try {
-            Write-Host "`n== Monitor information from $($Computer) ==`n"
+            Write-Output "`n== Monitor information from $($Computer) ==`n"
             Get-CimInstance -ComputerName $Computer -ClassName WmiMonitorID -Namespace root\wmi | Foreach-Object {
                 [PSCustomObject]@{
                     Active                = $_.Active
