@@ -42,6 +42,9 @@ Function Confirm-NeededModules {
         Confirm-NeededModules -NeededModules "PowerCLI"
         This will only install PowerCli if it's not installed and upgrade it if needed. This example will not delete the old versions of PowerCli or import the module at the end.
 
+        Confirm-NeededModules -NeededModules "PowerCLI" -OnlyUpgrade
+        This will only upgrade PowerCLI module
+
         Confirm-NeededModules -OnlyUpgrade
         This will upgrade all of the already installed modules on the computer to the latest version
 
