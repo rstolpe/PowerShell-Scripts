@@ -71,7 +71,7 @@ function Remove-BrowserSettings {
     )
     if ($ListUsers -eq $False) {
         if ([string]::IsNullOrEmpty($UserName)) {
-            Write-Output "You must enter a username!" -ForegroundColor Red
+            Write-Host "You must enter a username!" -ForegroundColor Red
             Break
         }
         if ($Edge -eq $False -and $Chrome -eq $False) {
@@ -96,17 +96,17 @@ function Remove-BrowserSettings {
     $GetAllUsers = (Get-CimInstance -ComputerName $ComputerName -className Win32_UserProfile | Where-Object { (-Not ($_.Special)) } | Select-Object LocalPath | foreach-object { $_.LocalPath.split('\')[-1] })
 
     if ($ListUsers -eq $true) {
-        Write-Output "== The following user profiles exists on $($ComputerName) ==`n"
+        Write-Host "== The following user profiles exists on $($ComputerName) ==`n"
         $GetAllUsers
     }
     else {
         # Setting up CIMSession and killing the browser process
         try {
-            Write-Output "Trying to stop all of the active $($BrowserProcessName) processes..."
+            Write-Host "Trying to stop all of the active $($BrowserProcessName) processes..."
             $BrowserProcess = Get-CimInstance -ComputerName $ComputerName -Class Win32_Process -Property Name | where-object { $_.name -eq "$($BrowserProcessName)" }
             if ($Null -ne $BrowserProcess) {
                 [void]($BrowserProcess | Invoke-CimMethod -MethodName Terminate)
-                Write-Output "All $($BrowserProcessName) processes has now been stopped!" -ForegroundColor Green
+                Write-Host "All $($BrowserProcessName) processes has now been stopped!" -ForegroundColor Green
             }
             else {
                 Write-Warning "Could not stop $($BrowserProcessName) processes because no process are running!"
@@ -119,7 +119,7 @@ function Remove-BrowserSettings {
         # Looping trough the UserNames to make sure it has a profile on the computer
         foreach ($User in $UserName.Split(",").Trim()) {
             if ($User -in $GetAllUsers) {
-                Write-Output "`n== Starting to delete all $($Browser) settings for $($User) ==`n"
+                Write-Host "`n== Starting to delete all $($Browser) settings for $($User) ==`n"
                 # Deleting Chrome/Edge folder in the user profile but before that it copy the bookmarks to C:\Temp and then back to the correct folder so the bookmarks don't get lost.
                 Invoke-Command -ComputerName $ComputerName -Scriptblock {
                     Param(
@@ -136,7 +136,7 @@ function Remove-BrowserSettings {
                         Break
                     }
 
-                    Write-Output "Trying to backup the bookmarks for $($Browser)..."
+                    Write-Host "Trying to backup the bookmarks for $($Browser)..."
                     try {
                         if (Test-Path -Path $BookmarkPath -PathType Leaf) {
                             if (Test-Path -Path "$env:SystemDrive\Temp") {
@@ -146,7 +146,7 @@ function Remove-BrowserSettings {
                                 New-Item -Path "$env:SystemDrive\" -Name "Temp" -ItemType "directory" > $Null
                                 Copy-Item $BookmarkPath -Destination "$env:SystemDrive\Temp"
                             }
-                            Write-Output "Bookmarks for $($Browser) has been backed up!" -ForegroundColor Green
+                            Write-Host "Bookmarks for $($Browser) has been backed up!" -ForegroundColor Green
                         }
                         else {
                             Write-Warning "Could not backup bookmarks as it did'nt exist!"
@@ -157,11 +157,11 @@ function Remove-BrowserSettings {
                         Break
                     }
                         
-                    Write-Output "Deleting all of the settings for $($Browser)..."
+                    Write-Host "Deleting all of the settings for $($Browser)..."
                     try {
                         if (Test-Path -Path $BrowserPath) {
                             Remove-Item $BrowserPath -Recurse -Force
-                            Write-Output "All of the settings for $($Browser) has been deleted!" -ForegroundColor Green
+                            Write-Host "All of the settings for $($Browser) has been deleted!" -ForegroundColor Green
                         }
                         else {
                             Write-Warning "Could not delete settings for $($Browser) as $($BrowserPath) did not exist"
@@ -172,13 +172,13 @@ function Remove-BrowserSettings {
                         Break
                     }
 
-                    Write-Output "Restoring the bookmark for $($Browser)..."
+                    Write-Host "Restoring the bookmark for $($Browser)..."
                     try {
                         if (Test-Path -Path "$env:SystemDrive\Temp\Bookmarks" -PathType Leaf) {
                             [void](New-Item -ItemType Directory -Force -Path $BookmarkFolderPath)
                             Copy-Item "$env:SystemDrive\Temp\Bookmarks" -Destination $BookmarkFolderPath
                             Remove-Item "$env:SystemDrive\Temp\Bookmarks" -Recurse -Force
-                            Write-Output "Bookmarks for $($Browser) has been restored!" -ForegroundColor Green
+                            Write-Host "Bookmarks for $($Browser) has been restored!" -ForegroundColor Green
                         }
                         else {
                             Write-Warning "Could not restore the bookmarks as $env:SystemDrive\Temp\Bookmarks did not exist!"
@@ -189,7 +189,7 @@ function Remove-BrowserSettings {
                         Break
                     }
                 } -ArgumentList $User, $Browser, $BrowserAddPath
-                Write-Output "The script run for $($User) is complete!" -ForegroundColor Green
+                Write-Host "The script run for $($User) is complete!" -ForegroundColor Green
             }
             else {
                 Write-Warning "$($User) don't have a user profile on $($ComputerName)!"

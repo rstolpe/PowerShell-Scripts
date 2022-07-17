@@ -30,13 +30,13 @@ Function Find-NeededModules {
     }
 
     # Installing needed packages if it's missing.
-    Write-Output "Making sure that all of the PackageProviders that are needed are installed..."
+    Write-Host "Making sure that all of the PackageProviders that are needed are installed..."
     foreach ($Provider in $NeededPackages) {
         if ($Provider -NotIn $AllPackageProviders) {
             Try {
-                Write-Output "Installing $($Provider) as it's missing..."
+                Write-Host "Installing $($Provider) as it's missing..."
                 Install-PackageProvider -Name $provider -Force -Scope AllUsers
-                Write-Output "$($Provider) is now installed" -ForegroundColor Green
+                Write-Host "$($Provider) is now installed" -ForegroundColor Green
             }
             catch {
                 Write-Error "$($PSItem.Exception)"
@@ -44,16 +44,16 @@ Function Find-NeededModules {
             }
         }
         else {
-            Write-Output "$($provider) is already installed." -ForegroundColor Green
+            Write-Host "$($provider) is already installed." -ForegroundColor Green
         }
     }
 
     # Setting PSGallery as trusted if it's not trusted
-    Write-Output "Making sure that PSGallery is set to Trusted..."
+    Write-Host "Making sure that PSGallery is set to Trusted..."
     if ((Get-PSRepository -name PSGallery | Select-Object InstallationPolicy -ExpandProperty InstallationPolicy) -eq "Untrusted") {
         try {
             Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-            Write-Output "PSGallery is now set to trusted" -ForegroundColor Green
+            Write-Host "PSGallery is now set to trusted" -ForegroundColor Green
         }
         catch {
             Write-Error "$($PSItem.Exception)"
@@ -61,7 +61,7 @@ Function Find-NeededModules {
         }
     }
     else {
-        Write-Output "PSGallery is already trusted" -ForegroundColor Green
+        Write-Host "PSGallery is already trusted" -ForegroundColor Green
     }
 
     # Checks if all modules in $NeededModules are installed and up to date.
@@ -73,13 +73,13 @@ Function Find-NeededModules {
             $AllVersions = Get-InstalledModule -Name $m -AllVersions | Sort-Object PublishedDate -Descending
             $MostRecentVersion = $AllVersions[0].Version
 
-            Write-Output "Checking if $($m) needs to be updated..."
+            Write-Host "Checking if $($m) needs to be updated..."
             # Check if the module are up to date
             if ($NewestVersion.Version -gt $AllVersions.Version) {
                 try {
-                    Write-Output "Updating $($m) to version $($NewestVersion.Version)..."
+                    Write-Host "Updating $($m) to version $($NewestVersion.Version)..."
                     Update-Module -Name $($m) -Scope AllUsers
-                    Write-Output "$($m) has been updated!" -ForegroundColor Green
+                    Write-Host "$($m) has been updated!" -ForegroundColor Green
                 }
                 catch {
                     Write-Error "$($PSItem.Exception)"
@@ -91,9 +91,9 @@ Function Find-NeededModules {
                     Foreach ($Version in $AllVersions) {
                         if ($Version.Version -ne $MostRecentVersion) {
                             try {
-                                Write-Output "Uninstalling previous version $($Version.Version) of module $($m)..."
+                                Write-Host "Uninstalling previous version $($Version.Version) of module $($m)..."
                                 Uninstall-Module -Name $m -RequiredVersion $Version.Version -Force -ErrorAction SilentlyContinue
-                                Write-Output "$($m) are not uninstalled!" -ForegroundColor Green
+                                Write-Host "$($m) are not uninstalled!" -ForegroundColor Green
                             }
                             catch {
                                 Write-Error "$($PSItem.Exception)"
@@ -104,15 +104,15 @@ Function Find-NeededModules {
                 }
             }
             else {
-                Write-Output "$($m) don't need to be updated as it's on the latest version" -ForegroundColor Green
+                Write-Host "$($m) don't need to be updated as it's on the latest version" -ForegroundColor Green
             }
         }
         else {
             # Installing missing module
-            Write-Output "Installing module $($m) as it's missing..."
+            Write-Host "Installing module $($m) as it's missing..."
             try {
                 Install-Module -Name $m -Scope AllUsers -Force
-                Write-Output "$($m) are now installed!" -ForegroundColor Green
+                Write-Host "$($m) are now installed!" -ForegroundColor Green
             }
             catch {
                 Write-Error "$($PSItem.Exception)"
@@ -126,13 +126,13 @@ Function Find-NeededModules {
     # Import module if it's not imported
     foreach ($module in $NeededModules) {
         if ($module -in $ImportedModules.Name) {
-            Write-Output "$($Module) are already imported!" -ForegroundColor Green
+            Write-Host "$($Module) are already imported!" -ForegroundColor Green
         }
         else {
             try {
-                Write-Output "Importing $($module) module..."
+                Write-Host "Importing $($module) module..."
                 Import-Module -Name $module -Force
-                Write-Output "$($module) are now imported!" -ForegroundColor Green
+                Write-Host "$($module) are now imported!" -ForegroundColor Green
             }
             catch {
                 Write-Error "$($PSItem.Exception)"
@@ -172,7 +172,7 @@ function Get-ADLastSeen {
 
 Function Unlock-ADAccounts {
     Find-NeededModules
-    Write-Output "`n================ Unlock AD account or accounts ================`n"
+    Write-Host "`n================ Unlock AD account or accounts ================`n"
     #You must write the usernames like this user1,user2,user3 etc or you can just write one user name
     [string]$UserNames = Read-Host -Prompt "What user or users do you want to unlock? (separate the users with ,)"
     [array]$UserNames = $UserNames -split ","
@@ -189,7 +189,7 @@ Function Unlock-ADAccounts {
                 # Unlocks the account but it also catches if something goes wrong, but it still continues.
                 try {
                     Unlock-ADAccount -Identity $ADuser.SamAccountName -Confirm:$false
-                    Write-Output "$($ADuser.SamAccountName) has now been unlocked" -ForegroundColor Green
+                    Write-Host "$($ADuser.SamAccountName) has now been unlocked" -ForegroundColor Green
                 }
                 catch {
                     Write-Error "$($PSItem.Exception)"
@@ -197,7 +197,7 @@ Function Unlock-ADAccounts {
                 }
             }
             else {
-                Write-Output "$($ADuser.SamAccountName) was not locked, did not do anything" -ForegroundColor Green
+                Write-Host "$($ADuser.SamAccountName) was not locked, did not do anything" -ForegroundColor Green
             }
         }
         else {
@@ -209,7 +209,7 @@ Function Unlock-ADAccounts {
 
 Function Enable-ADAccounts {
     Find-NeededModules
-    Write-Output "`n================ Enable AD account or accounts ================`n"
+    Write-Host "`n================ Enable AD account or accounts ================`n"
     #You must write the usernames like this user1,user2,user3 etc or you can just write one user name
     [string]$UserNames = Read-Host -Prompt "What user or users do you want to enable? (separate the users with , )"
     [array]$UserNames = $UserNames -split ","
@@ -226,7 +226,7 @@ Function Enable-ADAccounts {
                 # Enable the account but it also catches if something goes wrong, but it still continues.
                 try {
                     Enable-ADAccount -Identity $ADuser.SamAccountName -Confirm:$false
-                    Write-Output "$($ADuser.SamAccountName) has now been enabled" -ForegroundColor Green
+                    Write-Host "$($ADuser.SamAccountName) has now been enabled" -ForegroundColor Green
                 }
                 catch {
                     Write-Error "$($PSItem.Exception)"
@@ -234,7 +234,7 @@ Function Enable-ADAccounts {
                 }
             }
             else {
-                Write-Output "$($ADuser.SamAccountName) was already enabled did not do anything" -ForegroundColor Green
+                Write-Host "$($ADuser.SamAccountName) was already enabled did not do anything" -ForegroundColor Green
             }
         }
         else {
@@ -246,7 +246,7 @@ Function Enable-ADAccounts {
 
 Function Debug-ADUser {
     Find-NeededModules
-    Write-Output "`n================ Debug user or users Active Directory account ================`n"
+    Write-Host "`n================ Debug user or users Active Directory account ================`n"
     #You must write the usernames like this user1,user2,user3 etc or you can just write one user name
     [string]$UserNames = Read-Host -Prompt "What user or users do you want to debug?"
     [array]$UserNames = $UserNames -split ","
@@ -259,9 +259,9 @@ Function Debug-ADUser {
             $Collectpwdexpdate = (Get-ADUser -Filter "samaccountname -eq '$($User)'" -Properties msDS-UserPasswordExpiryTimeComputed).'msDS-UserPasswordExpiryTimeComputed'
             $Today = Get-Date
 
-            Write-Output "`n================ Status of $($User) ================`n"
+            Write-Host "`n================ Status of $($User) ================`n"
             if ($UserInfo.Enabled -eq $true) {
-                Write-Output "Enabled: Yes" -ForegroundColor Green
+                Write-Host "Enabled: Yes" -ForegroundColor Green
             }
             else {
                 Write-Warning "Enabled: No"
@@ -270,22 +270,22 @@ Function Debug-ADUser {
                 Write-Warning "Locked: Yes"
             }
             else {
-                Write-Output "Locked: No" -ForegroundColor Green
+                Write-Host "Locked: No" -ForegroundColor Green
             }
             if (-Not($Collectpwdexpdate -eq "9223372036854775807")) {
                 $pwdexpdate = [datetime]::FromFileTime($Collectpwdexpdate).ToString("yyyy-MM-dd HH:mm")
             }
             if ($pwdexpdate -like "1601-01-01*" -or $pwdexpdate -like "01/01/1601*") {
-                Write-Output "Password expired: No, but it's set that the user need to change the password on the next login" -ForegroundColor Green
+                Write-Host "Password expired: No, but it's set that the user need to change the password on the next login" -ForegroundColor Green
             }
             elseif ($UserInfo.Passwordneverexpires -eq $true) {
-                Write-Output "Password expired: No, the password are set so it will never expire" -ForegroundColor Green
+                Write-Host "Password expired: No, the password are set so it will never expire" -ForegroundColor Green
             }
             elseif ($UserInfo.passwordexpired -eq $true) {
                 Write-Warning "Password expired: Yes, the password did expire $($pwdexpdate)"
             }
             elseif ($UserInfo.passwordexpired -eq $false) {
-                Write-Output "Password expired: No, password expires $($pwdexpdate)" -ForegroundColor Green
+                Write-Host "Password expired: No, password expires $($pwdexpdate)" -ForegroundColor Green
             }
             else {
                 $Null
@@ -296,11 +296,11 @@ Function Debug-ADUser {
                     Write-Warning "Account Expired: Yes, it did expire $($UserInfo.AccountExpirationDate.ToString("yyyy-MM-dd HH:mm"))"
                 }
                 else {
-                    Write-Output "Account Expired: No, it expires $($UserInfo.AccountExpirationDate.ToString("yyyy-MM-dd HH:mm"))" -ForegroundColor Green 
+                    Write-Host "Account Expired: No, it expires $($UserInfo.AccountExpirationDate.ToString("yyyy-MM-dd HH:mm"))" -ForegroundColor Green 
                 }
             }
             else {
-                Write-Output "Account Expired: No" -ForegroundColor Green 
+                Write-Host "Account Expired: No" -ForegroundColor Green 
             }
 
             $GetLastDate = Get-ADLastSeen -ObjectName $User -ObjectType "User"
@@ -311,10 +311,10 @@ Function Debug-ADUser {
                 $Null
             }
             elseif ($LastLoginDate -eq "1601-01-01 01:00") {
-                Write-Output "Last connected to the domain: Has never connected" -ForegroundColor Red
+                Write-Host "Last connected to the domain: Has never connected" -ForegroundColor Red
             }
             else {
-                Write-Output "Last connected to the domain: $($GetLastDate)" -ForegroundColor Green 
+                Write-Host "Last connected to the domain: $($GetLastDate)" -ForegroundColor Green 
             }
         }
         else {
@@ -325,11 +325,11 @@ Function Debug-ADUser {
 }
 
 Function Select-ADFunction { 
-    Write-Output "`n================ Stolpe.io Active Directory tool ================"
-    Write-Output "1: Press '1' to debug user or users Active Directory account"
-    Write-Output "2: Press '2' to unlock user or users"
-    Write-Output "3: Press '3' to enable user or users"
-    Write-Output "Q: Press 'Q' to quit."
+    Write-Host "`n================ Stolpe.io Active Directory tool ================"
+    Write-Host "1: Press '1' to debug user or users Active Directory account"
+    Write-Host "2: Press '2' to unlock user or users"
+    Write-Host "3: Press '3' to enable user or users"
+    Write-Host "Q: Press 'Q' to quit."
     $WhatFunction = Read-Host "What function do you want to run?"
 
     Switch ($WhatFunction ) {

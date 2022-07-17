@@ -73,22 +73,22 @@ Function Confirm-NeededModules {
         $CurrentInstalledPackageProviders = Get-PackageProvider -ListAvailable | Select-Object Name -ExpandProperty Name
     }
 
-    Write-Output $HeadLine
-    Write-Output "Please wait, this can take time..."
+    Write-Host $HeadLine
+    Write-Host "Please wait, this can take time..."
     # This packages are needed for this script to work, you can add more if you want. Don't confuse this with modules
     if ($OnlyUpgrade -eq $false) {
         # Making sure that TLS 1.2 is used.
-        Write-Output "Making sure that TLS 1.2 is used..."
+        Write-Host "Making sure that TLS 1.2 is used..."
         [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 
         # Installing needed packages if it's missing.
-        Write-Output "Making sure that all of the PackageProviders that are needed are installed..."
-        foreach ($Provider in $NeededPackages) {
+        Write-Host "Making sure that all of the PackageProviders that are needed are installed..."
+        foreach ($Provider in $NeededPackages.Name) {
             if ($Provider -NotIn $CurrentInstalledPackageProviders) {
                 Try {
-                    Write-Output "Installing $($Provider) as it's missing..."
+                    Write-Host "Installing $($Provider) as it's missing..."
                     Install-PackageProvider -Name $provider -Force -Scope AllUsers
-                    Write-Output "$($Provider) is now installed" -ForegroundColor Green
+                    Write-Host "$($Provider) is now installed" -ForegroundColor Green
                 }
                 catch {
                     Write-Error "$($PSItem.Exception)"
@@ -96,16 +96,16 @@ Function Confirm-NeededModules {
                 }
             }
             else {
-                Write-Output "$($provider) is already installed." -ForegroundColor Green
+                Write-Host "$($provider) is already installed." -ForegroundColor Green
             }
         }
 
         # Setting PSGallery as trusted if it's not trusted
-        Write-Output "Making sure that PSGallery is set to Trusted..."
+        Write-Host "Making sure that PSGallery is set to Trusted..."
         if ((Get-PSRepository -name PSGallery | Select-Object InstallationPolicy -ExpandProperty InstallationPolicy) -eq "Untrusted") {
             try {
                 Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-                Write-Output "PSGallery is now set to trusted" -ForegroundColor Green
+                Write-Host "PSGallery is now set to trusted" -ForegroundColor Green
             }
             catch {
                 Write-Error "$($PSItem.Exception)"
@@ -113,7 +113,7 @@ Function Confirm-NeededModules {
             }
         }
         else {
-            Write-Output "PSGallery is already trusted" -ForegroundColor Green
+            Write-Host "PSGallery is already trusted" -ForegroundColor Green
         }
     }
 
@@ -126,13 +126,13 @@ Function Confirm-NeededModules {
             $AllVersions = Get-InstalledModule -Name $m -AllVersions | Sort-Object PublishedDate -Descending
             $MostRecentVersion = $AllVersions[0].Version
 
-            Write-Output "Checking if $($m) needs to be updated..."
+            Write-Host "Checking if $($m) needs to be updated..."
             # Check if the module are up to date
             if ($NewestVersion.Version -gt $AllVersions.Version) {
                 try {
-                    Write-Output "Updating $($m) to version $($NewestVersion.Version)..."
+                    Write-Host "Updating $($m) to version $($NewestVersion.Version)..."
                     Update-Module -Name $($m) -Force
-                    Write-Output "$($m) has been updated!" -ForegroundColor Green
+                    Write-Host "$($m) has been updated!" -ForegroundColor Green
                 }
                 catch {
                     Write-Error "$($PSItem.Exception)"
@@ -144,9 +144,9 @@ Function Confirm-NeededModules {
                         Foreach ($Version in $AllVersions) {
                             if ($Version.Version -ne $MostRecentVersion) {
                                 try {
-                                    Write-Output "Uninstalling previous version $($Version.Version) of module $($m)..."
+                                    Write-Host "Uninstalling previous version $($Version.Version) of module $($m)..."
                                     Uninstall-Module -Name $m -RequiredVersion $Version.Version -Force -ErrorAction SilentlyContinue
-                                    Write-Output "$($m) are not uninstalled!" -ForegroundColor Green
+                                    Write-Host "$($m) are not uninstalled!" -ForegroundColor Green
                                 }
                                 catch {
                                     Write-Error "$($PSItem.Exception)"
@@ -158,15 +158,15 @@ Function Confirm-NeededModules {
                 }
             }
             else {
-                Write-Output "$($m) don't need to be updated as it's on the latest version" -ForegroundColor Green
+                Write-Host "$($m) don't need to be updated as it's on the latest version" -ForegroundColor Green
             }
         }
         else {
             # Installing missing module
-            Write-Output "Installing module $($m) as it's missing..."
+            Write-Host "Installing module $($m) as it's missing..."
             try {
                 Install-Module -Name $m -Scope AllUsers -Force
-                Write-Output "$($m) are now installed!" -ForegroundColor Green
+                Write-Host "$($m) are now installed!" -ForegroundColor Green
             }
             catch {
                 Write-Error "$($PSItem.Exception)"
@@ -181,13 +181,13 @@ Function Confirm-NeededModules {
         # Import module if it's not imported
         foreach ($module in $NeededModules.Split(",").Trim()) {
             if ($module -in $ImportedModules.Name) {
-                Write-Output "$($Module) are already imported!" -ForegroundColor Green
+                Write-Host "$($Module) are already imported!" -ForegroundColor Green
             }
             else {
                 try {
-                    Write-Output "Importing $($module) module..."
+                    Write-Host "Importing $($module) module..."
                     Import-Module -Name $module -Force
-                    Write-Output "$($module) are now imported!" -ForegroundColor Green
+                    Write-Host "$($module) are now imported!" -ForegroundColor Green
                 }
                 catch {
                     Write-Error "$($PSItem.Exception)"
@@ -196,7 +196,7 @@ Function Confirm-NeededModules {
             }
         }
     }
-    Write-Output "Finished!" -ForegroundColor Green
+    Write-Host "Finished!" -ForegroundColor Green
 }
 
 Function Remove-MSPatches {
@@ -204,15 +204,15 @@ Function Remove-MSPatches {
         Write-Warning "Remove-MSPatches only works with PowerShell 5.1, skipping this function."
     }
     else {
-        Write-Output "`n=== Delete all orphaned patches ===`n"
+        Write-Host "`n=== Delete all orphaned patches ===`n"
         $OrphanedPatch = Get-OrphanedPatch
         if ($Null -ne $OrphanedPatch) {
             $FreeUp = Get-MsiPatch | select-object OrphanedPatchSize -ExpandProperty OrphanedPatchSize
-            Write-Output "This will free up: $($FreeUp)GB"
+            Write-Host "This will free up: $($FreeUp)GB"
             try {
-                Write-Output "Deleting all of the orphaned patches..."
+                Write-Host "Deleting all of the orphaned patches..."
                 Get-OrphanedPatch | Remove-Item
-                Write-Output "Success, all of the orphaned patches has been deleted!" -ForegroundColor Green
+                Write-Host "Success, all of the orphaned patches has been deleted!" -ForegroundColor Green
             }
             catch {
                 Write-Error "$($PSItem.Exception)"
@@ -220,26 +220,26 @@ Function Remove-MSPatches {
             }
         }
         else {
-            Write-Output "No orphaned patches was found." -ForegroundColor Green
+            Write-Host "No orphaned patches was found." -ForegroundColor Green
         }
     }
 }
 
 Function Update-MSUpdates {
-    Write-Output "`n=== Windows Update and Windows Store ===`n"
+    Write-Host "`n=== Windows Update and Windows Store ===`n"
     #Update Windows Store apps!
     if ($PSVersion -gt 5) {
         Write-Warning "Microsoft store updates only works with PowerShell 5.1, skipping this function."
     }
     else {
         try {
-            Write-Output "Checking if Windows Store has any updates..."
+            Write-Host "Checking if Windows Store has any updates..."
             $namespaceName = "root\cimv2\mdm\dmmap"
             $className = "MDM_EnterpriseModernAppManagement_AppManagement01"
             $wmiObj = Get-WmiObject -Namespace $namespaceName -Class $className
             $result = $wmiObj.UpdateScanMethod()
-            Write-Output "$($result)" -ForegroundColor Green
-            Write-Output "Success, checking and if needed updated Windows Store apps!" -ForegroundColor Green
+            Write-Host "$($result)" -ForegroundColor Green
+            Write-Host "Success, checking and if needed updated Windows Store apps!" -ForegroundColor Green
         }
         catch {
             Write-Error "$($PSItem.Exception)"
@@ -249,14 +249,14 @@ Function Update-MSUpdates {
 
     # Checking after Windows Updates
     try {
-        Write-Output "Starting to search after Windows Updates..."
+        Write-Host "Starting to search after Windows Updates..."
         $WSUSUpdates = Get-WindowsUpdate
         if ($Null -ne $WSUSUpdates) {
             Install-WindowsUpdate -AcceptAll
-            Write-Output "All of the Windows Updates has been installed!" -ForegroundColor Green
+            Write-Host "All of the Windows Updates has been installed!" -ForegroundColor Green
         }
         else {
-            Write-Output "All of the latest updates has been installed already! Your up to date!" -ForegroundColor Green
+            Write-Host "All of the latest updates has been installed already! Your up to date!" -ForegroundColor Green
         }
     }
     catch {
@@ -266,11 +266,11 @@ Function Update-MSUpdates {
 }
 
 Function Update-MSDefender {
-    Write-Output "`n=== Microsoft Defender ===`n"
+    Write-Host "`n=== Microsoft Defender ===`n"
     try {
-        Write-Output "Update signatures from Microsoft Update Server..."
+        Write-Host "Update signatures from Microsoft Update Server..."
         Update-MpSignature -UpdateSource MicrosoftUpdateServer
-        Write-Output "Updated signatures complete!" -ForegroundColor Green
+        Write-Host "Updated signatures complete!" -ForegroundColor Green
     }
     catch {
         Write-Error "$($PSItem.Exception)"
@@ -279,9 +279,9 @@ Function Update-MSDefender {
 
 
     try {
-        Write-Output "Starting Defender Quick Scan, please wait..."
+        Write-Host "Starting Defender Quick Scan, please wait..."
         Start-MpScan -ScanType QuickScan -ErrorAction SilentlyContinue
-        Write-Output "Defender quick scan is completed!" -ForegroundColor Green
+        Write-Host "Defender quick scan is completed!" -ForegroundColor Green
     }
     catch {
         Write-Error "$($PSItem.Exception)"
@@ -290,21 +290,21 @@ Function Update-MSDefender {
 }
 
 function Remove-TempFolderFiles {
-    Write-Output "`n=== Starting to delete temp files and folders ===`n"
+    Write-Host "`n=== Starting to delete temp files and folders ===`n"
     $WindowsOld = "C:\Windows.old"
     $Users = Get-ChildItem -Path C:\Users | select-object name -ExpandProperty Name
     $TempFolders = @("C:\Temp", "C:\Tmp", "C:\Windows\Temp", "C:\Windows\Prefetch", "C:\Windows\SoftwareDistribution\Download")
     $SpecialFolders = @("C:\`$Windows`.~BT", "C:\`$Windows`.~WS")
 
     try {
-        Write-Output "Stopping wuauserv..."
+        Write-Host "Stopping wuauserv..."
         Stop-Service -Name 'wuauserv'
         do {
-            Write-Output 'Waiting for wuauserv to stop...'
+            Write-Host 'Waiting for wuauserv to stop...'
             Start-Sleep -s 1
 
         } while (Get-Process wuauserv -ErrorAction SilentlyContinue)
-        Write-Output "Wuauserv is now stopped!" -ForegroundColor Green
+        Write-Host "Wuauserv is now stopped!" -ForegroundColor Green
     }
     catch {
         Write-Error "$($PSItem.Exception)"
@@ -314,9 +314,9 @@ function Remove-TempFolderFiles {
     foreach ($TempFolder in $TempFolders) {
         if (Test-Path -Path $TempFolder) {
             try {
-                Write-Output "Deleting all files in $($TempFolder)..."
+                Write-Host "Deleting all files in $($TempFolder)..."
                 Remove-Item "$($TempFolder)\*" -Recurse -Force -Confirm:$false
-                Write-Output "All files in $($TempFolder) has been deleted!" -ForegroundColor Green
+                Write-Host "All files in $($TempFolder) has been deleted!" -ForegroundColor Green
             }
             catch {
                 Write-Error "$($PSItem.Exception)"
@@ -326,9 +326,9 @@ function Remove-TempFolderFiles {
     }
 
     Try {
-        Write-Output "Starting wuauserv again..."
+        Write-Host "Starting wuauserv again..."
         Start-Service -Name 'wuauserv'
-        Write-Output "Wuauserv has started again!" -ForegroundColor Green
+        Write-Host "Wuauserv has started again!" -ForegroundColor Green
     }
     catch {
         Write-Error "$($PSItem.Exception)"
@@ -339,9 +339,9 @@ function Remove-TempFolderFiles {
         $UsrTemp = "C:\Users\$($usr)\AppData\Local\Temp"
         if (Test-Path -Path $UsrTemp) {
             try {
-                Write-Output "Deleting all files in $($UsrTemp)..."
+                Write-Host "Deleting all files in $($UsrTemp)..."
                 Remove-Item "$($UsrTemp)\*" -Recurse -Force -Confirm:$false -ErrorAction SilentlyContinue
-                Write-Output "All files in $($UsrTemp) has been deleted!" -ForegroundColor Green
+                Write-Host "All files in $($UsrTemp) has been deleted!" -ForegroundColor Green
             }
             catch {
                 Write-Error "$($PSItem.Exception)"
@@ -352,9 +352,9 @@ function Remove-TempFolderFiles {
 
     if (Test-Path -Path $WindowsOld) {
         try {
-            Write-Output "Deleting folder $($WindowsOld)..."
+            Write-Host "Deleting folder $($WindowsOld)..."
             Remove-Item "$($WindowsOld)\" -Recurse -Force -Confirm:$false
-            Write-Output "The folder $($WindowsOld) has been deleted!" -ForegroundColor Green
+            Write-Host "The folder $($WindowsOld) has been deleted!" -ForegroundColor Green
         }
         catch {
             Write-Error "$($PSItem.Exception)"
@@ -367,9 +367,9 @@ function Remove-TempFolderFiles {
             try {
                 takeown /F "$($sFolder)\*" /R /A
                 icacls "$($sFolder)\*.*" /T /grant administrators:F
-                Write-Output "Deleting folder $($sFolder)\..."
+                Write-Host "Deleting folder $($sFolder)\..."
                 Remove-Item "$($sFolder)\" -Recurse -Force -Confirm:$False
-                Write-Output "Folder $($sFolder)\* has been deleted!" -ForegroundColor Green
+                Write-Host "Folder $($sFolder)\* has been deleted!" -ForegroundColor Green
             }
             catch {
                 Write-Error "$($PSItem.Exception)"
@@ -467,7 +467,7 @@ Start-CleanDisk
 Update-MSDefender
 Update-MSUpdates
 
-Write-Output "The script is finished!"
+Write-Host "The script is finished!"
 $RebootNeeded = Get-WURebootStatus | Select-Object RebootRequired -ExpandProperty RebootRequired
 if ($RebootNeeded -eq "true") {
     Write-Warning "Windows Update want you to reboot your computer, so please do that!" -ForegroundColor Yellow
