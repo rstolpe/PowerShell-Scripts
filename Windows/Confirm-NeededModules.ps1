@@ -199,5 +199,5 @@ Function Confirm-NeededModules {
             }
         }
     }
-    Write-Host "Finished!" -ForegroundColor Green
+    Write-Host "`n== Script Finished! ==" -ForegroundColor Green
 }
