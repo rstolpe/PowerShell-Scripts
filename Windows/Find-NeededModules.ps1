@@ -59,19 +59,21 @@ Function Find-NeededModules {
         [switch]$DeleteOldVersion,
         [switch]$OnlyUpgrade
     )
-
-    Write-Host "`n=== Making sure that all modules are installad and up to date ===`n"
-    Write-Host "Please wait, this can take time..."
-    # This packages are needed for this script to work, you can add more if you want. Don't confuse this with modules
-    $NeededPackages = @("NuGet", "PowerShellGet")
     # Collects all of the installed modules on the system
     $CurrentModules = Get-InstalledModule | Select-Object Name, Version | Sort-Object Name
-    # Collects all of the installed packages
-    $AllPackageProviders = Get-PackageProvider -ListAvailable | Select-Object Name -ExpandProperty Name
+    $HeadLine = "`n=== Making sure that all modules are installad and up to date ===`n"
 
     if ($OnlyUpgrade -eq $True) {
         $NeededModules = $CurrentModules
+        $HeadLine = "`n=== Making sure that all modules up to date ===`n"
     }
+
+    Write-Host $HeadLine
+    Write-Host "Please wait, this can take time..."
+    # This packages are needed for this script to work, you can add more if you want. Don't confuse this with modules
+    $NeededPackages = @("NuGet", "PowerShellGet")
+    # Collects all of the installed packages
+    $AllPackageProviders = Get-PackageProvider -ListAvailable | Select-Object Name -ExpandProperty Name
 
     # Making sure that TLS 1.2 is used.
     [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
@@ -96,21 +98,23 @@ Function Find-NeededModules {
         }
     }
 
-    # Setting PSGallery as trusted if it's not trusted
-    Write-Host "Making sure that PSGallery is set to Trusted..."
-    if ((Get-PSRepository -name PSGallery | Select-Object InstallationPolicy -ExpandProperty InstallationPolicy) -eq "Untrusted") {
-        try {
-            Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-            Write-Host "PSGallery is now set to trusted" -ForegroundColor Green
+    if ($OnlyUpgrade -eq $false) {
+        # Setting PSGallery as trusted if it's not trusted
+        Write-Host "Making sure that PSGallery is set to Trusted..."
+        if ((Get-PSRepository -name PSGallery | Select-Object InstallationPolicy -ExpandProperty InstallationPolicy) -eq "Untrusted") {
+            try {
+                Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+                Write-Host "PSGallery is now set to trusted" -ForegroundColor Green
+            }
+            catch {
+                Write-Error "Error could not set PSGallery to trusted"
+                Write-Error "$($PSItem.Exception.Message)"
+                continue
+            }
         }
-        catch {
-            Write-Error "Error could not set PSGallery to trusted"
-            Write-Error "$($PSItem.Exception.Message)"
-            continue
+        else {
+            Write-Host "PSGallery is already trusted" -ForegroundColor Green
         }
-    }
-    else {
-        Write-Host "PSGallery is already trusted" -ForegroundColor Green
     }
 
     # Checks if all modules in $NeededModules are installed and up to date.
