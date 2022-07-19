@@ -24,4 +24,8 @@ All of the Windows scripts are stored in the [Windows folder](https://github.com
     This function let you delete Edge or Chrome settings for a specific user or users from either local or remote computer. 
 
 ### [VMWare](https://github.com/rstolpe/PowerShell-Scripts/tree/main/VMWare)
-All of the VMWare scripts are stored in the [VMWare folder](https://github.com/rstolpe/PowerShell-Scripts/tree/main/VMWare) in this [repo](https://github.com/rstolpe/PowerShell-Scripts)
+All of the VMWare scripts are stored in the [VMWare folder](https://github.com/rstolpe/PowerShell-Scripts/tree/main/VMWare) in this [repo](https://github.com/rstolpe/PowerShell-Scripts)  
+You must install VMWare.PowerCLI before you use my scripts, you can do that with `Install-Module -name VMware.PowerCLI -Force`
+
+-[Get-VMSerial]()
+    Returns the serial number of one or more VDI:s.
