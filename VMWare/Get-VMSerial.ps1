@@ -36,12 +36,12 @@ function Get-VMSerial {
 
         $VM
         $Uuid.TrimEnd()
-
-        try {
-            Disconnect-VIServer -Server $VIServer -Force -Confirm:$false
-        }
-        catch {
-            Write-Error "$($PSItem.Exception)"
-        }
+    }
+    
+    try {
+        Disconnect-VIServer -Server $VIServer -Force -Confirm:$false
+    }
+    catch {
+        Write-Error "$($PSItem.Exception)"
     }
 }
