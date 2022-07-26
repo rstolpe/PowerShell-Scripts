@@ -65,7 +65,7 @@ Function Confirm-NeededModules {
 
     if ($OnlyUpgrade -eq $True) {
         if ($Null -eq $NeededModules) {
-            $NeededModules = $CurrentModules
+            $NeededModules = $CurrentModules.Name
         }
         $HeadLine = "`n=== Making sure that all modules up to date ===`n"
     }
